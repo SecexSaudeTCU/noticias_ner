@@ -1,0 +1,25 @@
+import pathlib
+
+# Define o caminho do diretório onde os dados serão armazenados
+diretorio_raiz = pathlib.Path(__file__).parent.parent
+diretorio_dados = diretorio_raiz.joinpath('dados')
+
+arquivo_noticias_rotulado = diretorio_dados.joinpath('labeled_4_labels.jsonl')
+diretorio_raiz_modelos = diretorio_dados.joinpath('modelos')
+
+diretorio_modelo_neuralmind_bert_base = diretorio_raiz_modelos.joinpath('bert-neuralmind').joinpath('base')
+subdiretorio_modelo_neuralmind_bert_base = diretorio_modelo_neuralmind_bert_base.joinpath(
+    'bert-base-portuguese-cased_pytorch_checkpoint')
+vocab_bert_base = diretorio_modelo_neuralmind_bert_base.joinpath('vocab.txt')
+
+diretorio_modelo_neuralmind_bert_large = diretorio_raiz_modelos.joinpath('bert-neuralmind').joinpath('large')
+subdiretorio_modelo_neuralmind_bert_large = diretorio_modelo_neuralmind_bert_large.joinpath(
+    'bert-large-portuguese-cased_pytorch_checkpoint')
+vocab_bert_large = diretorio_modelo_neuralmind_bert_large.joinpath('vocab.txt')
+
+diretorio_modelo_bert_finetuned = diretorio_raiz_modelos.joinpath('bert-neuralmind-finetuned')
+
+# URL para a API/microserviço que encapsula a consulta a dados de CNPJ.  A ideia é que no futuro esta solução possa ser
+# substituída, por exemplo, a alguma API do Solr do TCU ou da solução MAPA da STI.
+url_api_cnpj = 'http://localhost:8090/cnpj_util/razao_social?q='
+
