@@ -5,11 +5,14 @@ TODO:
 
 """
 import logging
+import os
 import time
 
 import pandas as pd
 from newspaper import Article
 import jsonlines
+
+from noticias_ner import config
 
 
 def get_text(url, max_retries=5, sleep=5):
@@ -46,7 +49,7 @@ def recuperar_textos(caminho_arquivo_noticias):
         textos_json.append({'text': texto})
 
     df['texto'] = textos
-    df.to_excel('com_textos.xlsx')
+    df.to_excel(os.path.join(config.diretorio_dados, 'com_textos.xlsx'))
 
     metade = int(len(textos_json) / 2)
 

@@ -1,3 +1,4 @@
+import itertools
 import json
 import os
 
@@ -7,7 +8,7 @@ import requests
 from noticias_ner import config
 
 
-def identificar_possiveis_empresas_citadas(caminho_arquivo):
+def identificar_possiveis_empresas_citadas(caminho_arquivo, filtrar_por_empresas_unicas=False):
     """
     Executa o passo responsável por, a partir das entidades do tipo ORGANIZAÇÃO, identificar possíveis valores para os
     CNPJs dessas empresas, utilizando inicialmente busca textual.
@@ -25,7 +26,8 @@ def identificar_possiveis_empresas_citadas(caminho_arquivo):
             # falso-positivos indicados pelo NER.
             if len(entidade.strip()) > 2:
                 map_empresa_to_cnpjs, tipo_busca = __buscar_empresas_por_razao_social(entidade)
-                if len(map_empresa_to_cnpjs) > 0:
+                qtd = len(map_empresa_to_cnpjs)
+                if qtd > 0 and ((not filtrar_por_empresas_unicas) or (filtrar_por_empresas_unicas and qtd == 1)):
                     resultado_analise[(titulo, link, midia, data, texto, ufs, entidade)] = [
                         (razao_social, cnpjs, tipo_busca) for razao_social, cnpjs in map_empresa_to_cnpjs.items()]
 

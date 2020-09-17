@@ -106,11 +106,11 @@ def extrai_noticias_google(q, dia_inicio, dia_fim, num_limite_paginas=1, lang='p
     return pd.DataFrame(resultados)
 
 
-def executar_busca():
+def executar_busca(data_inicial):
     # String de busca (sugestão do Samuel)
     q = 'fraude and (aquisição or contratação)'
     # Datas de início e fim (1º de abril de 2020 até o dia corrente)
-    dia_inicio = date.fromisoformat('2020-04-01')
+    dia_inicio = date.fromisoformat(data_inicial)
     dia_fim = date.today()
     # Número limite de páginas
     num_limite_paginas = 100

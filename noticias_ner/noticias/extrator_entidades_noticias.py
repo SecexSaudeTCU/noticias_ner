@@ -42,7 +42,7 @@ def extrair_entidades(arquivo):
     logger.info('Processamento concluído.')
 
 
-def obter_textos():
+def obter_textos(data_inicial='2020-04-01'):
     """
     Obtém os textos de notícias da Internet.
     """
@@ -51,12 +51,6 @@ def obter_textos():
     logger.addHandler(logging.StreamHandler())
     start_time = time.time()
     logger.info('Buscando as notícias na Internet...')
-    arquivo_noticias = executar_busca()
+    arquivo_noticias = executar_busca(data_inicial)
     recuperar_textos(arquivo_noticias)
     logger.info("--- %s minutos ---" % ((time.time() - start_time) / 60))
-
-
-if __name__ == '__main__':
-    #extrair_entidades(os.path.join(config.diretorio_noticias, 'com_textos_baseline.xlsx'))
-    #obter_textos()
-    extrair_entidades(os.path.join(config.diretorio_dados, 'com_textos.xlsx'))
