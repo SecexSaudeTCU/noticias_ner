@@ -1,8 +1,14 @@
+import os
 import pathlib
 
 # Define o caminho do diretório onde os dados serão armazenados
 diretorio_raiz = pathlib.Path(__file__).parent.parent
+
+diretorio_config_email = diretorio_raiz.joinpath('config').joinpath('mail')
+arquivo_config_email = diretorio_config_email.joinpath('mail.cfg')
+
 diretorio_dados = diretorio_raiz.joinpath('dados')
+arquivo_gerado_final = diretorio_dados.joinpath('com_empresas.xlsx')
 
 arquivo_noticias_rotulado = diretorio_dados.joinpath('labeled_4_labels.jsonl')
 diretorio_raiz_modelos = diretorio_dados.joinpath('modelos')
@@ -22,4 +28,3 @@ diretorio_modelo_bert_finetuned = diretorio_raiz_modelos.joinpath('bert-neuralmi
 # URL para a API/microserviço que encapsula a consulta a dados de CNPJ.  A ideia é que no futuro esta solução possa ser
 # substituída, por exemplo, a alguma API do Solr do TCU ou da solução MAPA da STI.
 url_api_cnpj = 'http://localhost:8090/cnpj_util/razao_social?q='
-

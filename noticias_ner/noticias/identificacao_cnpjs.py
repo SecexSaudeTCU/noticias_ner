@@ -12,6 +12,10 @@ def identificar_possiveis_empresas_citadas(caminho_arquivo, filtrar_por_empresas
     """
     Executa o passo responsável por, a partir das entidades do tipo ORGANIZAÇÃO, identificar possíveis valores para os
     CNPJs dessas empresas, utilizando inicialmente busca textual.
+    :param caminho_arquivo:  Caminho para o arquivo de entrada.
+    :param filtrar_por_empresas_unicas:  Caso seja True, retorna apenas entidades do tipo ORGANIZAÇÃO que estejam
+    associadas a exatamente uma razão social.
+    :return: Caminho para o arquivo de saída.
     """
     df = pd.read_excel(caminho_arquivo)
     resultado_analise = dict()
@@ -35,8 +39,10 @@ def identificar_possiveis_empresas_citadas(caminho_arquivo, filtrar_por_empresas
         {k: pd.DataFrame(v, columns=['POSSÍVEIS EMPRESAS CITADAS', 'POSSÍVEIS CNPJs CITADOS', 'TIPO BUSCA']) for k, v in
          resultado_analise.items()})
 
-    df.to_excel(os.path.join(config.diretorio_dados, 'com_empresas.xlsx'))
+    df.to_excel(config.arquivo_gerado_final)
     print('Processamento concluído.')
+
+    return config.arquivo_gerado_final
 
 
 def __get_valores(df, i, data, link, midia, texto, titulo, uf):
