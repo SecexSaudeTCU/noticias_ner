@@ -19,16 +19,17 @@ def __get_NERs():
 def extrair_entidades(arquivo):
     """
     Extrai as entidade de um arquivo com extensão .xlsx que contém o conjunto de textos a serem analisados, bem como
-    seus metadados.  O resultado é salvo em um arquivo chamado ner.xlsx.
-
-    :param arquivo Caminho para o arquivo.
+    seus metadados.  O resultado é salvo em um arquivo XLSX.
+    :param arquivo: Caminho para o arquivo.
+    :return: Caminho para o arquivo gerado.
     """
     logger = logging.getLogger('covidata')
     df = pd.read_excel(arquivo)
 
     logger.info('Extraindo entidades relevantes das notícias...')
     ners = __get_NERs()
-    writer = pd.ExcelWriter(os.path.join(config.diretorio_dados, 'ner.xlsx'), engine='xlsxwriter')
+    caminho_arquivo = os.path.join(config.diretorio_dados, 'ner.xlsx')
+    writer = pd.ExcelWriter(caminho_arquivo, engine='xlsxwriter')
 
     for ner in ners:
         algoritmo = ner.get_nome_algoritmo()
@@ -40,6 +41,7 @@ def extrair_entidades(arquivo):
 
     writer.save()
     logger.info('Processamento concluído.')
+    return caminho_arquivo
 
 
 def obter_textos(data_inicial='2020-04-01'):

@@ -8,7 +8,7 @@ from noticias_ner.noticias.identificacao_cnpjs import identificar_possiveis_empr
 from noticias_ner.util.mail import enviar_email
 
 
-def __enviar_email_com_resultados(caminho_arquivo):
+def __enviar_email_com_resultados(arquivos):
     cfg = configparser.ConfigParser()
     cfg.read_file(open(config.diretorio_config_email.joinpath('mail.cfg')))
     nome = cfg.get('mail', 'receiver_name')
@@ -16,7 +16,7 @@ def __enviar_email_com_resultados(caminho_arquivo):
     text = text.replace('{nome}', nome)
     html = open(config.diretorio_config_email.joinpath("conteudo.html"), "r", encoding='utf8').read()
     html = html.replace('{nome}', nome)
-    enviar_email(caminho_arquivo, "[RISKDATA] Relação de organizações privadas citadas em notícias da mídia",
+    enviar_email(arquivos, "[RISKDATA] Relação de organizações privadas citadas em notícias da mídia",
                  text, html)
 
 
@@ -33,10 +33,10 @@ if __name__ == '__main__':
         obter_textos()
 
     # Executa a extração de entidades
-    extrair_entidades(os.path.join(config.diretorio_dados, 'com_textos.xlsx'))
+    arquivo_entidades = extrair_entidades(os.path.join(config.diretorio_dados, 'com_textos.xlsx'))
 
     # Filtra apenas as entidades do tipo ORGANIZAÇÃO e enriquece com nomes de empresas/CNPJs candidatos na base da
     # Receita Federal
     arquivo_final = identificar_possiveis_empresas_citadas(os.path.join(config.diretorio_dados, 'ner.xlsx'),
                                                            filtrar_por_empresas_unicas=True)
-    __enviar_email_com_resultados(arquivo_final)
+    __enviar_email_com_resultados([arquivo_entidades, arquivo_final])
