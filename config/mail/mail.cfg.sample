@@ -1,0 +1,7 @@
+[mail]
+sender_email = riskdatateste@tcu.gov.br
+sender_pwd = **********
+receiver_email = *******@tcu.gov.br
+receiver_name = *********
+smtp = ****.tcu.gov.br
+port = ****

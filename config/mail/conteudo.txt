@@ -1,0 +1,5 @@
+Prezado(a) {nome},
+    Segue em anexo arquivo Excel com relação de organizações privadas citadas em notícias da mídia.
+
+    Atenciosamente,
+    Equipe RiskData
