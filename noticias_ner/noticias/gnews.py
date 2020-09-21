@@ -2,16 +2,15 @@
 Rotina de extração de notícias da aba News do Google a partir de string de busca e dias de início e fim.
 
 """
+import datetime as DT
 import logging
 import os
-
-import pandas as pd
-import urllib
 import time
 from datetime import date
-from GoogleNews import GoogleNews
-
 from os import path
+
+import pandas as pd
+from GoogleNews import GoogleNews
 
 from noticias_ner import config
 
@@ -107,13 +106,16 @@ def extrai_noticias_google(q, dia_inicio, dia_fim, num_limite_paginas=1, lang='p
 
 
 def executar_busca(data_inicial):
+    dia_inicio = __get_dia_inicio(data_inicial)
+
     # String de busca (sugestão do Samuel)
     q = 'fraude and (aquisição or contratação)'
-    # Datas de início e fim (1º de abril de 2020 até o dia corrente)
-    dia_inicio = date.fromisoformat(data_inicial)
+
     dia_fim = date.today()
+
     # Número limite de páginas
     num_limite_paginas = 100
+
     # Realiza busca
     df = extrai_noticias_google(q, dia_inicio, dia_fim, num_limite_paginas=num_limite_paginas, sleep=10, tentativas=10)
 
@@ -123,4 +125,14 @@ def executar_busca(data_inicial):
 
     caminho_arquivo_resultante = os.path.join(config.diretorio_dados, f'noticias_n_{len(df)}.xlsx')
     df.to_excel(caminho_arquivo_resultante)
+
     return caminho_arquivo_resultante
+
+
+def __get_dia_inicio(data_inicial):
+    if not data_inicial:
+        today = DT.date.today()
+        dia_inicio = today - DT.timedelta(days=7)
+    else:
+        dia_inicio = date.fromisoformat(data_inicial)
+    return dia_inicio

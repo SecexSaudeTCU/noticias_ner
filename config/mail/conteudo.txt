@@ -1,5 +1,6 @@
 Prezados,
-    Segue em anexo arquivo Excel com relação de organizações privadas citadas em notícias da mídia.
+    Segue em anexo arquivo Excel com relação de organizações privadas citadas em notícias da mídia a partir do dia
+    {data_inicial}.
 
     Atenciosamente,
     Equipe RiskData

@@ -1,6 +1,7 @@
 import configparser
 import os
 import sys
+from datetime import date
 
 from noticias_ner import config
 from noticias_ner.noticias.extrator_entidades_noticias import obter_textos, extrair_entidades
@@ -8,14 +9,18 @@ from noticias_ner.noticias.identificacao_cnpjs import identificar_possiveis_empr
 from noticias_ner.util.mail import enviar_email
 
 
-def __enviar_email_com_resultados(arquivos):
+def __enviar_email_com_resultados(arquivos, data_inicial):
     cfg = configparser.ConfigParser()
     cfg.read_file(open(config.diretorio_config_email.joinpath('mail.cfg')))
-    nome = cfg.get('mail', 'receiver_name')
     text = open(config.diretorio_config_email.joinpath("conteudo.txt"), "r", encoding='utf8').read()
-    text = text.replace('{nome}', nome)
+    dia_inicio = date.fromisoformat(data_inicial)
+    dia = dia_inicio.day
+    mes = dia_inicio.month
+    ano = dia_inicio.year
+    data_formatada = f'{dia}/{mes}/{ano}'
+    text = text.replace('{data_inicial}', data_formatada)
     html = open(config.diretorio_config_email.joinpath("conteudo.html"), "r", encoding='utf8').read()
-    html = html.replace('{nome}', nome)
+    html = html.replace('{data_inicial}', data_formatada)
     enviar_email(arquivos, "[RISKDATA] Relação de organizações privadas citadas em notícias da mídia",
                  text, html)
 
@@ -39,4 +44,4 @@ if __name__ == '__main__':
     # Receita Federal
     arquivo_final = identificar_possiveis_empresas_citadas(os.path.join(config.diretorio_dados, 'ner.xlsx'),
                                                            filtrar_por_empresas_unicas=True)
-    __enviar_email_com_resultados([arquivo_entidades, arquivo_final])
+    __enviar_email_com_resultados([arquivo_entidades, arquivo_final], data_inicial)

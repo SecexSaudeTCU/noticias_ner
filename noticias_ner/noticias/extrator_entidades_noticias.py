@@ -44,7 +44,7 @@ def extrair_entidades(arquivo):
     return caminho_arquivo
 
 
-def obter_textos(data_inicial='2020-04-01'):
+def obter_textos(data_inicial=None):
     """
     Obtém os textos de notícias da Internet.
     :param data_inicial: Data inicial de publicação pela qual as notícias serão pesquisadas.  Valor padrão: 2020-04-01.

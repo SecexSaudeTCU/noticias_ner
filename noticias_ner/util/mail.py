@@ -29,7 +29,7 @@ def enviar_email(arquivos, assunto, text, html):
 
     with smtplib.SMTP_SSL(servidor_smtp, porta, context=context) as server:
         server.login(sender_email, credencial)
-        server.sendmail(sender_email, receiver_email, text)
+        server.sendmail(sender_email, receiver_email.split(','), text)
 
 
 def __criar_mensagem(arquivos, assunto, html, receiver_email, sender_email, text):
@@ -42,7 +42,7 @@ def __criar_mensagem(arquivos, assunto, html, receiver_email, sender_email, text
     message.attach(part1)
     message.attach(part2)
     message["From"] = sender_email
-    message["To"] = receiver_email
+    message["To"] = sender_email
     message["Subject"] = assunto
     message["Bcc"] = receiver_email  # Recommended for mass emails
     __anexar_arquivos(arquivos, message)
