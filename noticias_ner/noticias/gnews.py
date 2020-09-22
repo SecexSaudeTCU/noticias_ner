@@ -46,7 +46,7 @@ def extrai_noticias_google(q, dia_inicio, dia_fim, num_limite_paginas=1, lang='p
     """
 
     # String de busca formatado adequadamente para URL
-    #q = urllib.parse.quote(q)
+    # q = urllib.parse.quote(q)
 
     # Strings com as datas no formato esperado pela lib GoogleNews
     formato_data = '%m/%d/%Y'
@@ -105,12 +105,8 @@ def extrai_noticias_google(q, dia_inicio, dia_fim, num_limite_paginas=1, lang='p
     return pd.DataFrame(resultados)
 
 
-def executar_busca(data_inicial):
+def executar_busca(data_inicial, q):
     dia_inicio = __get_dia_inicio(data_inicial)
-
-    # String de busca (sugestão do Samuel)
-    q = 'fraude and (aquisição or contratação)'
-
     dia_fim = date.today()
 
     # Número limite de páginas

@@ -44,9 +44,10 @@ def extrair_entidades(arquivo):
     return caminho_arquivo
 
 
-def obter_textos(data_inicial=None):
+def obter_textos(q, data_inicial=None):
     """
     Obtém os textos de notícias da Internet.
+    :param q: Query string a ser encaminhada à busca do Google News.
     :param data_inicial: Data inicial de publicação pela qual as notícias serão pesquisadas.  Valor padrão: 2020-04-01.
     :return:
     """
@@ -55,6 +56,6 @@ def obter_textos(data_inicial=None):
     logger.addHandler(logging.StreamHandler())
     start_time = time.time()
     logger.info('Buscando as notícias na Internet...')
-    arquivo_noticias = executar_busca(data_inicial)
+    arquivo_noticias = executar_busca(data_inicial, q)
     recuperar_textos(arquivo_noticias)
     logger.info("--- %s minutos ---" % ((time.time() - start_time) / 60))

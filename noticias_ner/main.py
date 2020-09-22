@@ -28,14 +28,21 @@ def __enviar_email_com_resultados(arquivos, data_inicial):
 if __name__ == '__main__':
     data_inicial = None
 
+    if len(sys.argv) == 1:
+        print('Exemplo de execução: main.py -t"<texto da consulta>" -d"<data inicial>"')
+        exit()
+
     if len(sys.argv) > 1:
-        data_inicial = sys.argv[1]
+        query = sys.argv[1][2:]
+
+        if len(sys.argv) == 3:
+            data_inicial = sys.argv[2][2:]
 
     # Baixa as notícias da Web
     if data_inicial:
-        obter_textos(data_inicial)
+        obter_textos(query, data_inicial)
     else:
-        obter_textos()
+        obter_textos(query)
 
     # Executa a extração de entidades
     arquivo_entidades = extrair_entidades(os.path.join(config.diretorio_dados, 'com_textos.xlsx'))
