@@ -9,6 +9,9 @@ from noticias_ner.noticias.gnews import executar_busca
 from noticias_ner.noticias.ner.bert.bert_ner import FinedTunedBERT_NER
 from noticias_ner.noticias.parse_news import recuperar_textos
 
+from backports.datetime_fromisoformat import MonkeyPatch
+MonkeyPatch.patch_fromisoformat()
+
 
 def __get_NERs():
     return [
