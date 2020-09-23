@@ -26,6 +26,10 @@ def __enviar_email_com_resultados(arquivos, data_inicial):
 
 
 if __name__ == '__main__':
+    # Adiciona diretorio raiz ao PATH. Devido a ausência de setup.py, isto garante que as importações sempre funcionarão
+    diretorio_raiz = os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir)
+    sys.path.append(diretorio_raiz)
+
     data_inicial = None
 
     if len(sys.argv) == 1:
