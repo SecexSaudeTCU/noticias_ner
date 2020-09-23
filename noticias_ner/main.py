@@ -1,4 +1,3 @@
-import configparser
 import os
 import sys
 from datetime import date
@@ -14,8 +13,6 @@ from noticias_ner.util.mail import enviar_email
 
 
 def __enviar_email_com_resultados(arquivos, data_inicial):
-    cfg = configparser.ConfigParser()
-    cfg.read_file(open(config.diretorio_config_email.joinpath('mail.cfg')))
     text = open(config.diretorio_config_email.joinpath("conteudo.txt"), "r", encoding='utf8').read()
     dia_inicio = date.fromisoformat(data_inicial)
     dia = dia_inicio.day
