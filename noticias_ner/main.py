@@ -47,8 +47,9 @@ if __name__ == '__main__':
     # Executa a extração de entidades
     arquivo_entidades = extrair_entidades(os.path.join(config.diretorio_dados, 'com_textos.xlsx'))
 
-    # Filtra apenas as entidades do tipo ORGANIZAÇÃO e enriquece com nomes de empresas/CNPJs candidatos na base da
-    # Receita Federal
-    arquivo_final = identificar_possiveis_empresas_citadas(os.path.join(config.diretorio_dados, 'ner.xlsx'),
+    if '--buscar_cnpj' in sys.argv:
+        # Filtra apenas as entidades do tipo ORGANIZAÇÃO e enriquece com nomes de empresas/CNPJs candidatos na base da
+        # Receita Federal
+        arquivo_final = identificar_possiveis_empresas_citadas(os.path.join(config.diretorio_dados, 'ner.xlsx'),
                                                            filtrar_por_empresas_unicas=True)
-    __enviar_email_com_resultados([arquivo_entidades, arquivo_final], data_inicial)
+        __enviar_email_com_resultados([arquivo_entidades, arquivo_final], data_inicial)
