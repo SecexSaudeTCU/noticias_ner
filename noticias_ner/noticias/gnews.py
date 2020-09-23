@@ -78,7 +78,7 @@ def extrai_noticias_google(q, dia_inicio, dia_fim, num_limite_paginas=1, lang='p
         # Adiciona reusltado à lista
         resultados = resultados + gn.result()
 
-        print(len(gn.result()), gn.result())
+        #print(len(gn.result()), gn.result())
 
         # Caso a consulta à página não tenha gerado resultados
         if gn.result() == []:
