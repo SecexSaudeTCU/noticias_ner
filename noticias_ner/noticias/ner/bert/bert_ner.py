@@ -1,4 +1,5 @@
 import numpy as np
+from pandas.io.common import stringify_path
 from transformers import pipeline, BertForTokenClassification, DistilBertTokenizerFast
 
 from noticias_ner import config
@@ -150,7 +151,7 @@ class FinedTunedBERT_NER(BaseBERT_NER):
         Utiliza o tokenizador para língua portuguesa neuralmind/bert-base-portuguese-cased.
         """
         super().__init__()
-        model = BertForTokenClassification.from_pretrained(config.diretorio_modelo_bert_finetuned)
+        model = BertForTokenClassification.from_pretrained(stringify_path(config.diretorio_modelo_bert_finetuned))
         tokenizer = DistilBertTokenizerFast.from_pretrained('neuralmind/bert-base-portuguese-cased'
                                                             , model_max_length=512
                                                             , do_lower_case=False

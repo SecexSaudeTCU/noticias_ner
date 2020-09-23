@@ -1,4 +1,3 @@
-import os
 import pathlib
 
 # Define o caminho do diretório onde os dados serão armazenados
