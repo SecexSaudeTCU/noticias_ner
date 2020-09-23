@@ -63,7 +63,6 @@ def extrai_noticias_google(q, dia_inicio, dia_fim, num_limite_paginas=1, lang='p
     logger = logging.getLogger('covidata')
     logger.info(f'Buscando página 1')
     gn.search(q)
-    #print(len(gn.result()), gn.result())
     resultados = resultados + gn.result()
     gn.clear()
 
@@ -77,8 +76,6 @@ def extrai_noticias_google(q, dia_inicio, dia_fim, num_limite_paginas=1, lang='p
 
         # Adiciona reusltado à lista
         resultados = resultados + gn.result()
-
-        #print(len(gn.result()), gn.result())
 
         # Caso a consulta à página não tenha gerado resultados
         if gn.result() == []:
