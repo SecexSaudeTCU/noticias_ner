@@ -18,14 +18,10 @@ class RepositorioCNPJCorporativo(RepositorioCNPJ):
         tipo_busca = ''
 
         if len(empresas) > 0:
-            print('Descrição buscada: ' + descricao)
-            print('Número de registros retornados = ' + str(len(empresas)))
             tipo_busca = "BUSCA EXATA RFB"
 
             for cnpj, nome in empresas:
                 map_empresas_to_cnpjs[nome].append(cnpj)
-
-            print(map_empresas_to_cnpjs)
         else:
             # TODO busca Solr
             pass

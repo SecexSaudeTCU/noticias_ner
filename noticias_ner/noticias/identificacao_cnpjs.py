@@ -1,3 +1,4 @@
+import logging
 import os
 
 import pandas as pd
@@ -29,32 +30,20 @@ def identificar_possiveis_empresas_citadas(caminho_arquivo, filtrar_por_empresas
             # falso-positivos indicados pelo NER.
             if len(entidade.strip()) > 2:
                 map_empresa_to_cnpjs, tipo_busca = repositorio_cnpj.buscar_empresas_por_razao_social(entidade)
-                print(map_empresa_to_cnpjs)
-                print(tipo_busca)
                 qtd = len(map_empresa_to_cnpjs)
-                print('len(map_empresa_to_cnpjs):' + str(qtd))
                 qtd_cnpjs = 0
 
                 if qtd > 0:
                     qtd_cnpjs = len(next(iter(map_empresa_to_cnpjs.values())))
-                    print('qtd_cnpjs = ' + str(qtd_cnpjs))
 
                 # Só adiciona a empresa ao resultado se ela foi ecnontrada nas bases (base RFB ou índice Lucene RFB) e,
                 # caso filtrar_por_empresas_unicas seja igual a True, se sua razão social é única e associda a um único
                 # CNPJ, para evitar confusão com empresas diferentes registradas na mesma razão social.  Futuramente,
                 # poderão ser implementados modelos que permitam identificar a empresa mais adequada.
-                condicao = qtd > 0 and ((not filtrar_por_empresas_unicas) or (
-                            filtrar_por_empresas_unicas and qtd == 1 and qtd_cnpjs == 1))
-                print('condicao = ' + str(condicao))
-                if condicao:
+                if qtd > 0 and ((not filtrar_por_empresas_unicas) or (
+                        filtrar_por_empresas_unicas and qtd == 1 and qtd_cnpjs == 1)):
                     resultado_analise[(titulo, link, midia, data, texto, ufs, entidade)] = [
                         (razao_social, cnpjs, tipo_busca) for razao_social, cnpjs in map_empresa_to_cnpjs.items()]
-                    print('resultado_analise:')
-                    print(resultado_analise)
-                    print('len(resultado_analise):')
-                    print(len(resultado_analise))
-                    print('qtd = ' + str(qtd))
-                    print('filtrar_por_empresas_unicas = ' + str(filtrar_por_empresas_unicas))
 
     if len(resultado_analise) > 0:
         df = pd.concat(
@@ -64,7 +53,8 @@ def identificar_possiveis_empresas_citadas(caminho_arquivo, filtrar_por_empresas
 
         df.to_excel(config.arquivo_gerado_final)
 
-    print('Processamento concluído.')
+    logger = logging.getLogger('covidata')
+    logger.info('Processamento concluído.')
 
     return config.arquivo_gerado_final
 
