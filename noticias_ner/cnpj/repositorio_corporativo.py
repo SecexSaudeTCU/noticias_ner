@@ -13,12 +13,13 @@ class RepositorioCNPJCorporativo(RepositorioCNPJ):
     def buscar_empresas_por_razao_social(self, razao_social):
         dao = DaoRFB_SQLServer()
         descricao = self.processar_descricao_contratado(razao_social)
-        print('Descrição buscada: ' + descricao)
         empresas = dao.buscar_empresa_por_razao_social(descricao)
         map_empresas_to_cnpjs = defaultdict(list)
         tipo_busca = ''
 
         if len(empresas) > 0:
+            print('Descrição buscada: ' + descricao)
+            print('Número de registros retornados = ' + str(len(empresas)))
             tipo_busca = "BUSCA EXATA RFB"
             map_empresas_to_cnpjs = {nome:cnpj for cnpj, nome in empresas}
         else:
