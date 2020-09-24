@@ -3,6 +3,7 @@ from collections import defaultdict
 
 import pyodbc
 
+from noticias_ner import config
 from noticias_ner.cnpj.repositorio import RepositorioCNPJ
 
 
@@ -33,7 +34,7 @@ class DaoRFB_SQLServer:
         Construtor da classe.
         """
         cfg = configparser.ConfigParser()
-        cfg.read_file(open('rfb.config'))
+        cfg.read_file(open(config.arquivo_config))
         self.conn = pyodbc.connect(
             'DRIVER={' + cfg.get("bd",
                                  "driver") + '};' + f'SERVER={cfg.get("bd", "server")};'
