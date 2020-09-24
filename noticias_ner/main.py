@@ -13,14 +13,14 @@ from noticias_ner.util.mail import enviar_email
 
 
 def __enviar_email_com_resultados(arquivos, data_inicial):
-    text = open(config.diretorio_config_email.joinpath("conteudo.txt"), "r", encoding='utf8').read()
+    text = open(config.diretorio_config.joinpath("conteudo.txt"), "r", encoding='utf8').read()
     dia_inicio = date.fromisoformat(data_inicial)
     dia = dia_inicio.day
     mes = dia_inicio.month
     ano = dia_inicio.year
     data_formatada = f'{dia}/{mes}/{ano}'
     text = text.replace('{data_inicial}', data_formatada)
-    html = open(config.diretorio_config_email.joinpath("conteudo.html"), "r", encoding='utf8').read()
+    html = open(config.diretorio_config.joinpath("conteudo.html"), "r", encoding='utf8').read()
     html = html.replace('{data_inicial}', data_formatada)
     enviar_email(arquivos, "[RISKDATA] Relação de organizações privadas citadas em notícias da mídia",
                  text, html)

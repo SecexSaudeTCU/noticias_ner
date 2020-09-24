@@ -5,3 +5,7 @@ receiver_email = *******@tcu.gov.br
 receiver_name = *********
 smtp = ****.tcu.gov.br
 port = ****
+
+[cnpj]
+modulo = noticias_ner.cnpj.repositorio
+classe = RepositorioCNPJAberto

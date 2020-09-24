@@ -3,8 +3,8 @@ import pathlib
 # Define o caminho do diretório onde os dados serão armazenados
 diretorio_raiz = pathlib.Path(__file__).parent.parent
 
-diretorio_config_email = diretorio_raiz.joinpath('config').joinpath('mail')
-arquivo_config_email = diretorio_config_email.joinpath('mail.cfg')
+diretorio_config = diretorio_raiz.joinpath('config')
+arquivo_config = diretorio_config.joinpath('noticias_ner.cfg')
 
 diretorio_dados = diretorio_raiz.joinpath('dados')
 arquivo_gerado_final = diretorio_dados.joinpath('com_empresas.xlsx')

@@ -1,10 +1,9 @@
-import json
 import os
 
 import pandas as pd
-import requests
 
 from noticias_ner import config
+from noticias_ner.cnpj.fabrica_repositorio import get_repositorio_cnpj
 
 
 def identificar_possiveis_empresas_citadas(caminho_arquivo, filtrar_por_empresas_unicas=False):
@@ -19,6 +18,7 @@ def identificar_possiveis_empresas_citadas(caminho_arquivo, filtrar_por_empresas
     df = pd.read_excel(caminho_arquivo)
     resultado_analise = dict()
     data = link = midia = texto = titulo = ufs = None
+    repositorio_cnpj = get_repositorio_cnpj()
 
     for i in range(len(df)):
         classificacao, data, entidade, link, midia, texto, titulo, ufs = __get_valores(df, i, data, link, midia, texto,
@@ -28,7 +28,7 @@ def identificar_possiveis_empresas_citadas(caminho_arquivo, filtrar_por_empresas
             # Desconsidera empresas com nome com menos de 3 caracteres - esses casos têm grande chance de serem
             # falso-positivos indicados pelo NER.
             if len(entidade.strip()) > 2:
-                map_empresa_to_cnpjs, tipo_busca = __buscar_empresas_por_razao_social(entidade)
+                map_empresa_to_cnpjs, tipo_busca = repositorio_cnpj.buscar_empresas_por_razao_social(entidade)
                 qtd = len(map_empresa_to_cnpjs)
                 qtd_cnpjs = 0
 
@@ -74,13 +74,7 @@ def __get_valores(df, i, data, link, midia, texto, titulo, uf):
     return classificacao, data, entidade, link, midia, texto, titulo, uf
 
 
-def __buscar_empresas_por_razao_social(razao_social):
-    resultado = json.loads(requests.get(config.url_api_cnpj + razao_social).content)
-    map_empresa_to_cnpjs = resultado['dados']['empresas']
-    tipo_busca = resultado['dados']['tipo_busca']
-    return map_empresa_to_cnpjs, tipo_busca
-
-
 if __name__ == '__main__':
     identificar_possiveis_empresas_citadas(os.path.join(config.diretorio_dados, 'ner.xlsx'),
-                                           filtrar_por_empresas_unicas=True)
+                                          filtrar_por_empresas_unicas=True)
+

@@ -11,7 +11,7 @@ from noticias_ner import config
 
 def enviar_email(arquivos, assunto, text, html):
     """
-    Envia um e-mail para o destinatário especificado no arquivo mail.cfg.
+    Envia um e-mail para o destinatário especificado no arquivo noticias_ner.cfg.
     :param arquivos: Caminhos para os arquivos a serem enviado como anexos.
     :param assunto: Assunto da mensagem.
     :param text: Conteúdo da mensagem em formato texto.
@@ -74,7 +74,7 @@ def __anexar_arquivos(arquivos, message):
 
 def __get_configuracoes():
     cfg = configparser.ConfigParser()
-    cfg.read_file(open(config.arquivo_config_email))
+    cfg.read_file(open(config.arquivo_config))
     sender_email = cfg.get('mail', 'sender_email')
     receiver_email = cfg.get('mail', 'receiver_email')
     servidor_smtp = cfg.get('mail', 'smtp')
