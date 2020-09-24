@@ -43,10 +43,17 @@ def identificar_possiveis_empresas_citadas(caminho_arquivo, filtrar_por_empresas
                         filtrar_por_empresas_unicas and qtd == 1 and qtd_cnpjs == 1)):
                     resultado_analise[(titulo, link, midia, data, texto, ufs, entidade)] = [
                         (razao_social, cnpjs, tipo_busca) for razao_social, cnpjs in map_empresa_to_cnpjs.items()]
+                    print('resultado_analise:')
+                    print(resultado_analise)
+                    print('len(resultado_analise):')
+                    print(len(resultado_analise))
+                    print('qtd = ' + str(qtd))
+                    print('filtrar_por_empresas_unicas = ' + str(filtrar_por_empresas_unicas))
 
     if len(resultado_analise) > 0:
         df = pd.concat(
-            {k: pd.DataFrame(v, columns=['POSSÍVEIS EMPRESAS CITADAS', 'POSSÍVEIS CNPJs CITADOS', 'TIPO BUSCA']) for k, v in
+            {k: pd.DataFrame(v, columns=['POSSÍVEIS EMPRESAS CITADAS', 'POSSÍVEIS CNPJs CITADOS', 'TIPO BUSCA']) for
+             k, v in
              resultado_analise.items()})
 
         df.to_excel(config.arquivo_gerado_final)
@@ -78,5 +85,4 @@ def __get_valores(df, i, data, link, midia, texto, titulo, uf):
 
 if __name__ == '__main__':
     identificar_possiveis_empresas_citadas(os.path.join(config.diretorio_dados, 'ner.xlsx'),
-                                          filtrar_por_empresas_unicas=True)
-
+                                           filtrar_por_empresas_unicas=True)
