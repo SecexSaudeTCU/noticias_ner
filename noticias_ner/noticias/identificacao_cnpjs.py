@@ -29,7 +29,10 @@ def identificar_possiveis_empresas_citadas(caminho_arquivo, filtrar_por_empresas
             # falso-positivos indicados pelo NER.
             if len(entidade.strip()) > 2:
                 map_empresa_to_cnpjs, tipo_busca = repositorio_cnpj.buscar_empresas_por_razao_social(entidade)
+                print(map_empresa_to_cnpjs)
+                print(tipo_busca)
                 qtd = len(map_empresa_to_cnpjs)
+                print('len(map_empresa_to_cnpjs):' + str(qtd))
                 qtd_cnpjs = 0
 
                 if qtd > 0:
