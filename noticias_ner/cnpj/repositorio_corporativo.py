@@ -1,7 +1,9 @@
 import configparser
+import re
 from collections import defaultdict
 
 import pyodbc
+import unidecode
 
 from noticias_ner import config
 from noticias_ner.cnpj.repositorio import RepositorioCNPJ
@@ -10,7 +12,8 @@ from noticias_ner.cnpj.repositorio import RepositorioCNPJ
 class RepositorioCNPJCorporativo(RepositorioCNPJ):
     def buscar_empresas_por_razao_social(self, razao_social):
         dao = DaoRFB_SQLServer()
-        empresas = dao.buscar_empresa_por_razao_social(razao_social)
+        descricao = self.processar_descricao_contratado(razao_social)
+        empresas = dao.buscar_empresa_por_razao_social(descricao)
         map_empresas_to_cnpjs = defaultdict(list)
         tipo_busca = ''
 
@@ -23,6 +26,21 @@ class RepositorioCNPJCorporativo(RepositorioCNPJ):
 
         dao.encerrar_conexao()
         return map_empresas_to_cnpjs, tipo_busca
+
+    def processar_descricao_contratado(self, descricao):
+        descricao = descricao.strip()
+        descricao = descricao.upper()
+
+        # Remove espaços extras
+        descricao = re.sub(' +', ' ', descricao)
+
+        # Remove acentos
+        descricao = unidecode.unidecode(descricao)
+
+        # Remova caracteres especiais
+        descricao = descricao.replace('&', '').replace('/', '').replace('-', '').replace('"', '')
+
+        return descricao
 
 
 class DaoRFB_SQLServer:
