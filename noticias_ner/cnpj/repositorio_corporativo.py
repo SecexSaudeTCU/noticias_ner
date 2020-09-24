@@ -21,13 +21,12 @@ class RepositorioCNPJCorporativo(RepositorioCNPJ):
             print('Descrição buscada: ' + descricao)
             print('Número de registros retornados = ' + str(len(empresas)))
             tipo_busca = "BUSCA EXATA RFB"
-            map_empresas_to_cnpjs = {nome:cnpj for cnpj, nome in empresas}
+            map_empresas_to_cnpjs = {nome: cnpj for cnpj, nome in empresas}
             print(map_empresas_to_cnpjs)
         else:
-            #TODO busca Solr
+            # TODO busca Solr
             pass
 
-        dao.encerrar_conexao()
         return map_empresas_to_cnpjs, tipo_busca
 
     def processar_descricao_contratado(self, descricao):
@@ -55,13 +54,14 @@ class DaoRFB_SQLServer:
         """
         Construtor da classe.
         """
-        cfg = configparser.ConfigParser()
-        cfg.read_file(open(config.arquivo_config))
-        self.conn = pyodbc.connect(
-            'DRIVER={' + cfg.get("bd",
-                                 "driver") + '};' + f'SERVER={cfg.get("bd", "server")};'
-                                                    f'Database={cfg.get("bd", "database")};UID={cfg.get("bd","uid")};'
-                                                    f'PWD={cfg.get("bd","pwd")}')
+        self.cfg = configparser.ConfigParser()
+        self.cfg.read_file(open(config.arquivo_config))
+
+    def __get_conexao(self):
+        conn = pyodbc.connect('DRIVER={' + self.cfg.get("bd", "driver") + '};' +
+                              f'SERVER={self.cfg.get("bd", "server")};Database={self.cfg.get("bd", "database")};'
+                              f'UID={self.cfg.get("bd", "uid")};PWD={self.cfg.get("bd", "pwd")}')
+        return conn
 
     def buscar_empresa_por_razao_social(self, nome):
         """
@@ -70,12 +70,13 @@ class DaoRFB_SQLServer:
         :param Nome procurado.
         :return As empresas que possuam razão social idêntica ao nome passado como parâmetro.
         """
-        c = self.conn.cursor()
-        cursor = c.execute(
-            "SELECT [num_cnpj], [nome] FROM [BD_RECEITA].[dbo].[CNPJ] WHERE [nome] = ? and [ind_matriz_filial] = ?",
-            (nome, 1))
-        return cursor.fetchall()
+        conexao = self.__get_conexao()
 
-    def encerrar_conexao(self):
-        self.conn.close()
+        with conexao:
+            c = conexao.cursor()
+            cursor = c.execute(
+                "SELECT [num_cnpj], [nome] FROM [BD_RECEITA].[dbo].[CNPJ] WHERE [nome] = ? and [ind_matriz_filial] = ?",
+                (nome, 1))
+            resultado = cursor.fetchall()
 
+        return resultado
