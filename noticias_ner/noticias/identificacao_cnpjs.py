@@ -44,11 +44,13 @@ def identificar_possiveis_empresas_citadas(caminho_arquivo, filtrar_por_empresas
                     resultado_analise[(titulo, link, midia, data, texto, ufs, entidade)] = [
                         (razao_social, cnpjs, tipo_busca) for razao_social, cnpjs in map_empresa_to_cnpjs.items()]
 
-    df = pd.concat(
-        {k: pd.DataFrame(v, columns=['POSSÍVEIS EMPRESAS CITADAS', 'POSSÍVEIS CNPJs CITADOS', 'TIPO BUSCA']) for k, v in
-         resultado_analise.items()})
+    if len(resultado_analise) > 0:
+        df = pd.concat(
+            {k: pd.DataFrame(v, columns=['POSSÍVEIS EMPRESAS CITADAS', 'POSSÍVEIS CNPJs CITADOS', 'TIPO BUSCA']) for k, v in
+             resultado_analise.items()})
 
-    df.to_excel(config.arquivo_gerado_final)
+        df.to_excel(config.arquivo_gerado_final)
+
     print('Processamento concluído.')
 
     return config.arquivo_gerado_final
