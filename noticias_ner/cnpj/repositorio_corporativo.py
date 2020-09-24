@@ -12,6 +12,7 @@ class RepositorioCNPJCorporativo(RepositorioCNPJ):
         dao = DaoRFB_SQLServer()
         empresas = dao.buscar_empresa_por_razao_social(razao_social)
         map_empresas_to_cnpjs = defaultdict(list)
+        tipo_busca = ''
 
         if len(empresas) > 0:
             tipo_busca = "BUSCA EXATA RFB"
