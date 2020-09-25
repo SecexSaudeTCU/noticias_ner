@@ -1,9 +1,7 @@
-import json
 from abc import ABC, abstractmethod
 
-import requests
-
 from noticias_ner import config
+from noticias_ner.cnpj.api_lucene import buscar_em_api_lucene
 
 
 class RepositorioCNPJ(ABC):
@@ -13,7 +11,5 @@ class RepositorioCNPJ(ABC):
 
 class RepositorioCNPJAberto(RepositorioCNPJ):
     def buscar_empresas_por_razao_social(self, razao_social):
-        resultado = json.loads(requests.get(config.url_api_cnpj + razao_social).content)
-        map_empresa_to_cnpjs = resultado['dados']['empresas']
-        tipo_busca = resultado['dados']['tipo_busca']
-        return map_empresa_to_cnpjs, tipo_busca
+        return buscar_em_api_lucene(razao_social, config.url_api_cnpj_aberta)
+

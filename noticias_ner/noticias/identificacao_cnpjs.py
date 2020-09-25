@@ -4,7 +4,7 @@ import os
 import pandas as pd
 
 from noticias_ner import config
-from noticias_ner.cnpj.fabrica_repositorio import get_repositorio_cnpj
+from noticias_ner.cnpj.fabrica_provedor_cnpj import get_repositorio_cnpj
 
 
 def identificar_possiveis_empresas_citadas(caminho_arquivo, filtrar_por_empresas_unicas=False):

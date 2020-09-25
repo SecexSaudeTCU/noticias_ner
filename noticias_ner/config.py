@@ -26,4 +26,4 @@ diretorio_modelo_bert_finetuned = diretorio_raiz_modelos.joinpath('bert-neuralmi
 
 # URL para a API/microserviço que encapsula a consulta a dados de CNPJ.  A ideia é que no futuro esta solução possa ser
 # substituída, por exemplo, a alguma API do Solr do TCU ou da solução MAPA da STI.
-url_api_cnpj = 'http://localhost:8090/cnpj_util/razao_social?q='
+url_api_cnpj_aberta = 'http://localhost:8090/cnpj_util/razao_social?q='
