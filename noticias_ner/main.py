@@ -36,12 +36,8 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         query = sys.argv[1][2:]
 
-        if len(sys.argv) == 3:
+        if len(sys.argv) >= 3:
             data_inicial = sys.argv[2][2:]
-
-    print('Argumentos:')
-    print(sys.argv)
-    print("Data inicial = " + data_inicial)
 
     # Baixa as notícias da Web
     if data_inicial:
