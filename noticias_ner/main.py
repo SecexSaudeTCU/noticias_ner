@@ -39,7 +39,8 @@ if __name__ == '__main__':
         if len(sys.argv) == 3:
             data_inicial = sys.argv[2][2:]
 
-    print('Argumentos = ' + sys.argv)
+    print('Argumentos:')
+    print(sys.argv)
     print("Data inicial = " + data_inicial)
 
     # Baixa as notícias da Web
