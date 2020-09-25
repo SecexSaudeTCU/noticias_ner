@@ -38,13 +38,7 @@ class RepositorioCNPJCorporativo(RepositorioCNPJ):
         # Caso não tenha encontrado nenhum resultado, utiliza como fallback o índice textual
         if len(empresas) == 0:
             dao_busca_textual = fabrica_provedor_cnpj.get_dao_busca_textual()
-            empresas, tipo_busca = dao_busca_textual.buscar_empresa_por_razao_social(descricao)
-
-        if len(empresas) == 0:
-            tipo_busca = ''
-
-        for cnpj, nome in empresas:
-            map_empresas_to_cnpjs[nome].append(cnpj)
+            map_empresas_to_cnpjs, tipo_busca = dao_busca_textual.buscar_empresa_por_razao_social(descricao)
 
         return map_empresas_to_cnpjs, tipo_busca
 
@@ -76,11 +70,18 @@ class DaoRFB_SQLServer(DaoRFB):
                 (nome, 1))
             resultado = cursor.fetchall()
 
-        return resultado, "BUSCA EXATA RFB"
+        tipo_busca = ''
+
+        if len(resultado) > 0:
+            tipo_busca = "BUSCA EXATA RFB"
+
+        return resultado, tipo_busca
+
 
 class DaoRFB_BuscaTextualLucene(DaoRFB):
     def buscar_empresa_por_razao_social(self, nome):
         return buscar_em_api_lucene(nome, self.cfg['busca']['url_busca_lucene'])
+
 
 class DaoRFB_BuscaTextualCorporativa(DaoRFB):
     def buscar_empresa_por_razao_social(self, nome):
@@ -123,7 +124,6 @@ class DaoRFB_BuscaTextualCorporativa(DaoRFB):
         content = response.content
         resultado = json.loads(content)
         return resultado
-
 
 # resultado = DaoRFB_BuscaTextualCorporativa().buscar_empresa_por_razao_social(
 #     processar_descricao_contratado('Buyerbr Serviços e Comércio Exteriror Ltda'))
