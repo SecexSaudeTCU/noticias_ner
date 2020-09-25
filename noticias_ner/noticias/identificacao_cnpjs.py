@@ -9,7 +9,7 @@ from noticias_ner.cnpj.fabrica_provedor_cnpj import get_repositorio_cnpj
 
 def identificar_possiveis_empresas_citadas(caminho_arquivo, filtrar_por_empresas_unicas=False):
     """
-    Executa o passo responsavel por, a partir das entidades do tipo ORGANIZACAO, identificar possíveis valores para os
+    Executa o passo responsavel por, a partir das entidades do tipo ORGANIZACAO, identificar possiveis valores para os
     CNPJs dessas empresas, utilizando inicialmente busca textual.
     :param caminho_arquivo:  Caminho para o arquivo de entrada.
     :param filtrar_por_empresas_unicas:  Caso seja True, retorna apenas entidades do tipo ORGANIZACAO que estejam
