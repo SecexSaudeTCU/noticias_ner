@@ -45,6 +45,23 @@ class RepositorioCNPJCorporativo(RepositorioCNPJ):
 
         return map_empresas_to_cnpjs, tipo_busca
 
+    def persistir_informacoes(self, df):
+        super().persistir_informacoes(df)
+        listas_cnpjs = df['POSSÍVEIS CNPJs CITADOS']
+        daoTipologias = DaoTipologias()
+        daoRFB = DaoRFB_SQLServer()
+
+        for lista_cnpj in listas_cnpjs:
+            for cnpj in lista_cnpj:
+                if not daoTipologias.existe_cadastro_para_cnpj(cnpj):
+                    daoTipologias.inserir_cnpj_em_lista_empresas_citadas(cnpj)
+
+                empresas_relacionadas = daoRFB.recuperar_empresas_relacionadas(cnpj)
+
+                for empresa in empresas_relacionadas:
+                    if daoTipologias.existe_contratacao_por_estado_ou_municipio(empresa):
+                        daoTipologias.inserir_cnpj_em_lista_empresas_relacionadas(empresa)
+
 
 class DaoRFB_SQLServer(DaoRFB):
     """
@@ -79,6 +96,24 @@ class DaoRFB_SQLServer(DaoRFB):
             tipo_busca = "BUSCA EXATA RFB"
 
         return resultado, tipo_busca
+
+    def recuperar_empresas_relacionadas(self, cnpj):
+        """
+        Recupera outras empresas em que os sócios/ex-sócios das empresas citadas na mídia também são ou foram sócios.
+        :param cnpj:
+        :return:
+        """
+        conexao = self.__get_conexao()
+
+        with conexao:
+            c = conexao.cursor()
+            cursor = c.execute(
+                "SELECT distinct NUM_CNPJ_EMPRESA FROM [BD_RECEITA_HIST].[dbo].[SOCIO] WHERE NUM_CPF IN "
+                "(SELECT NUM_CPF FROM [BD_RECEITA_HIST].[dbo].[SOCIO] WHERE NUM_CNPJ_EMPRESA = ?)",
+                (cnpj,))
+            resultado = cursor.fetchall()
+
+        return resultado
 
 
 class DaoRFB_BuscaTextualLucene(DaoRFB):
@@ -128,6 +163,51 @@ class DaoRFB_BuscaTextualCorporativa(DaoRFB):
         resultado = json.loads(content)
         return resultado
 
-# resultado = DaoRFB_BuscaTextualCorporativa().buscar_empresa_por_razao_social(
-#     processar_descricao_contratado('Buyerbr Serviços e Comércio Exteriror Ltda'))
-# print(resultado)
+
+class DaoTipologias:
+    def __get_conexao(self):
+        conn = pyodbc.connect('DRIVER={' + self.cfg.get("bd", "driver") + '};' +
+                              f'SERVER={self.cfg.get("bd", "server")};'
+                              f'Database={self.cfg.get("bd_tipologias", "database")};'
+                              f'UID={self.cfg.get("bd", "uid")};PWD={self.cfg.get("bd", "pwd")}')
+        return conn
+
+    def existe_cadastro_para_cnpj(self, cnpj):
+        conexao = self.__get_conexao()
+
+        with conexao:
+            c = conexao.cursor()
+            cursor = c.execute(
+                "SELECT * FROM [BDU_SGI].[covidata].[CVDT_FRE04_Resultado] WHERE CNPJ = ?", (cnpj,))
+            resultado = cursor.fetchall()
+            return len(resultado) > 0
+
+    def existe_contratacao_por_estado_ou_municipio(self, cnpj):
+        conexao = self.__get_conexao()
+
+        with conexao:
+            c = conexao.cursor()
+            cursor = c.execute(
+                "SELECT * FROM [BDU_SGI].[covidata].[DADOS_TRATADOS] WHERE CONTRATADO_CNPJ = ?", (cnpj,))
+            resultado = cursor.fetchall()
+            return len(resultado) > 0
+
+    def inserir_cnpj_em_lista_empresas_citadas(self, cnpj):
+        conexao = self.__get_conexao()
+
+        with conexao:
+            c = conexao.cursor()
+            c.execute(
+                "INSERT INTO [BDU_SGI].[covidata].[CVDT_FRE04_Resultado] (TIPOLOGIA, CNPJ, OCORRENCIAS) VALUES(?,?,?)",
+                ('CVDT_FRE04', cnpj, 1))
+            c.commit()
+
+    def inserir_cnpj_em_lista_empresas_relacionadas(self, cnpj):
+        conexao = self.__get_conexao()
+
+        with conexao:
+            c = conexao.cursor()
+            c.execute(
+                "INSERT INTO [BDU_SGI].[covidata].[CVDT_FRE05_Resultado] (TIPOLOGIA, CNPJ, OCORRENCIAS) VALUES(?,?,?)",
+                ('CVDT_FRE05', cnpj, 1))
+            c.commit()

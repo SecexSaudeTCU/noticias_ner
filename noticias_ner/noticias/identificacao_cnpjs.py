@@ -51,8 +51,7 @@ def identificar_possiveis_empresas_citadas(caminho_arquivo, filtrar_por_empresas
             {k: pd.DataFrame(v, columns=['POSSÍVEIS EMPRESAS CITADAS', 'POSSÍVEIS CNPJs CITADOS', 'TIPO BUSCA']) for
              k, v in
              resultado_analise.items()})
-
-        df.to_excel(config.arquivo_gerado_final)
+        repositorio_cnpj.persistir_informacoes(df)
 
     logger = logging.getLogger('covidata')
     logger.info('Processamento concluído.')

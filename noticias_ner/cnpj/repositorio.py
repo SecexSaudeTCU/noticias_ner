@@ -9,7 +9,12 @@ class RepositorioCNPJ(ABC):
     def buscar_empresas_por_razao_social(self, razao_social):
         pass
 
+    def persistir_informacoes(self, df):
+        df.to_excel(config.arquivo_gerado_final)
+
+
 class RepositorioCNPJAberto(RepositorioCNPJ):
     def buscar_empresas_por_razao_social(self, razao_social):
         return buscar_em_api_lucene(razao_social, config.url_api_cnpj_aberta)
+
 
