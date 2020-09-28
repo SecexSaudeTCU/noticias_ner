@@ -33,9 +33,10 @@ class RepositorioCNPJCorporativo(RepositorioCNPJ):
         dao_sql = DaoRFB_SQLServer()
         descricao = processar_descricao_contratado(razao_social)
         empresas, tipo_busca = dao_sql.buscar_empresa_por_razao_social(descricao)
-        print('Empresas encontradas:')
-        print(empresas)
         map_empresas_to_cnpjs = defaultdict(list)
+
+        for cnpj, nome in empresas:
+            map_empresas_to_cnpjs[nome].append(cnpj)
 
         # Caso não tenha encontrado nenhum resultado, utiliza como fallback o índice textual
         if len(empresas) == 0:
@@ -71,10 +72,6 @@ class DaoRFB_SQLServer(DaoRFB):
                 "SELECT [num_cnpj], [nome] FROM [BD_RECEITA].[dbo].[CNPJ] WHERE [nome] = ? and [ind_matriz_filial] = ?",
                 (nome, 1))
             resultado = cursor.fetchall()
-
-        print('Nome buscado = ' + nome)
-        print('Resultados encontrados:')
-        print(resultado)
 
         tipo_busca = ''
 
