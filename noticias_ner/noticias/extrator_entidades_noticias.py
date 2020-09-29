@@ -59,6 +59,7 @@ def obter_textos(q, data_inicial=None):
     logger.addHandler(logging.StreamHandler())
     start_time = time.time()
     logger.info('Buscando as notícias na Internet...')
-    arquivo_noticias = executar_busca(data_inicial, q)
+    arquivo_noticias, dia_inicio = executar_busca(data_inicial, q)
     recuperar_textos(arquivo_noticias)
     logger.info("--- %s minutos ---" % ((time.time() - start_time) / 60))
+    return dia_inicio

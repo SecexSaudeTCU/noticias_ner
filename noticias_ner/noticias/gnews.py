@@ -119,7 +119,7 @@ def executar_busca(data_inicial, q):
     caminho_arquivo_resultante = os.path.join(config.diretorio_dados, f'noticias_n_{len(df)}.xlsx')
     df.to_excel(caminho_arquivo_resultante)
 
-    return caminho_arquivo_resultante
+    return caminho_arquivo_resultante, dia_inicio
 
 
 def __get_dia_inicio(data_inicial):

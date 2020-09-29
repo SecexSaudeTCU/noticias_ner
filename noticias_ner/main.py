@@ -1,6 +1,5 @@
 import os
 import sys
-from datetime import date
 
 # Adiciona diretorio raiz ao PATH. Devido a ausência de setup.py, isto garante que as importações sempre funcionarão
 diretorio_raiz = os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir)
@@ -15,10 +14,9 @@ from noticias_ner.util.mail import enviar_email
 def __enviar_email_com_resultados(arquivos, data_inicial):
     diretorio_conteudo_email = config.diretorio_config.joinpath("mail")
     text = open(diretorio_conteudo_email.joinpath("conteudo.txt"), "r", encoding='utf8').read()
-    dia_inicio = date.fromisoformat(data_inicial)
-    dia = dia_inicio.day
-    mes = dia_inicio.month
-    ano = dia_inicio.year
+    dia = data_inicial.day
+    mes = data_inicial.month
+    ano = data_inicial.year
     data_formatada = f'{dia}/{mes}/{ano}'
     text = text.replace('{data_inicial}', data_formatada)
     html = open(diretorio_conteudo_email.joinpath("conteudo.html"), "r", encoding='utf8').read()
@@ -42,9 +40,9 @@ if __name__ == '__main__':
 
     # Baixa as notícias da Web
     if data_inicial:
-        obter_textos(query, data_inicial)
+        dia_inicio = obter_textos(query, data_inicial)
     else:
-        obter_textos(query)
+        dia_inicio = obter_textos(query)
 
     # Executa a extração de entidades
     arquivo_entidades = extrair_entidades(os.path.join(config.diretorio_dados, 'com_textos.xlsx'))
@@ -54,4 +52,4 @@ if __name__ == '__main__':
         # Receita Federal
         arquivo_final = identificar_possiveis_empresas_citadas(os.path.join(config.diretorio_dados, 'ner.xlsx'),
                                                                filtrar_por_empresas_unicas=True)
-        __enviar_email_com_resultados([arquivo_entidades, arquivo_final], data_inicial)
+        __enviar_email_com_resultados([arquivo_entidades, arquivo_final], dia_inicio)
