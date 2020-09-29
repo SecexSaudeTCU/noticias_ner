@@ -47,22 +47,20 @@ class RepositorioCNPJCorporativo(RepositorioCNPJ):
 
     def persistir_informacoes(self, df):
         super().persistir_informacoes(df)
-        listas_cnpjs = df['POSSÍVEIS CNPJs CITADOS']
-        daoTipologias = DaoTipologias()
-        daoRFB = DaoRFB_SQLServer()
-
-        for lista_cnpj in listas_cnpjs:
-            for cnpj in lista_cnpj:
-                empresas_relacionadas = daoRFB.recuperar_empresas_relacionadas(cnpj)
-
-                if not daoTipologias.existe_cadastro_para_cnpj(cnpj):
-                    daoTipologias.inserir_cnpj_em_lista_empresas_citadas(cnpj)
-
-                empresas_relacionadas = daoRFB.recuperar_empresas_relacionadas(cnpj)
-
-                for empresa in empresas_relacionadas:
-                    if daoTipologias.existe_contratacao_por_estado_ou_municipio(empresa):
-                        daoTipologias.inserir_cnpj_em_lista_empresas_relacionadas(empresa)
+        # listas_cnpjs = df['POSSÍVEIS CNPJs CITADOS']
+        # daoTipologias = DaoTipologias()
+        # daoRFB = DaoRFB_SQLServer()
+        #
+        # for lista_cnpj in listas_cnpjs:
+        #     for cnpj in lista_cnpj:
+        #         if not daoTipologias.existe_cadastro_para_cnpj(cnpj):
+        #             daoTipologias.inserir_cnpj_em_lista_empresas_citadas(cnpj)
+        #
+        #         empresas_relacionadas = daoRFB.recuperar_empresas_relacionadas(cnpj)
+        #
+        #         for empresa in empresas_relacionadas:
+        #             if daoTipologias.existe_contratacao_por_estado_ou_municipio(empresa):
+        #                 daoTipologias.inserir_cnpj_em_lista_empresas_relacionadas(empresa)
 
 
 class DaoRFB_SQLServer(DaoRFB):
