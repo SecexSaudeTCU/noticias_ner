@@ -53,6 +53,8 @@ class RepositorioCNPJCorporativo(RepositorioCNPJ):
 
         for lista_cnpj in listas_cnpjs:
             for cnpj in lista_cnpj:
+                empresas_relacionadas = daoRFB.recuperar_empresas_relacionadas(cnpj)
+
                 if not daoTipologias.existe_cadastro_para_cnpj(cnpj):
                     daoTipologias.inserir_cnpj_em_lista_empresas_citadas(cnpj)
 
@@ -211,3 +213,12 @@ class DaoTipologias:
                 "INSERT INTO [BDU_SGI].[covidata].[CVDT_FRE05_Resultado] (TIPOLOGIA, CNPJ, OCORRENCIAS) VALUES(?,?,?)",
                 ('CVDT_FRE05', cnpj, 1))
             c.commit()
+
+print('Testando DaoRFB_SQLServer().recuperar_empresas_relacionadas():')
+print(DaoRFB_SQLServer().recuperar_empresas_relacionadas('00837999000128'))
+
+print('Testando DaoTipologias().existe_cadastro_para_cnpj():')
+print(DaoTipologias().existe_cadastro_para_cnpj('02482618000160'))
+
+print('Testando DaoTipologias().existe_contratacao_por_estado_ou_municipio():')
+print(DaoTipologias().existe_contratacao_por_estado_ou_municipio('20416210000172'))
