@@ -1,16 +1,10 @@
 import json
-import os
 import re
-import sys
 from collections import defaultdict
 
 import pyodbc
 import requests
 import unidecode
-
-# Adiciona diretorio raiz ao PATH. Devido a ausência de setup.py, isto garante que as importações sempre funcionarão
-diretorio_raiz = os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, os.pardir)
-sys.path.append(diretorio_raiz)
 
 from noticias_ner.cnpj import fabrica_provedor_cnpj
 from noticias_ner.cnpj.api_lucene import buscar_em_api_lucene
@@ -219,12 +213,3 @@ class DaoTipologias(DaoBase):
                 "INSERT INTO [BDU_SGI].[covidata].[CVDT_FRE05_Resultado] (TIPOLOGIA, CNPJ, OCORRENCIAS) VALUES(?,?,?)",
                 ('CVDT_FRE05', cnpj, 1))
             c.commit()
-
-print('Testando DaoRFB_SQLServer().recuperar_empresas_relacionadas():')
-print(DaoRFB_SQLServer().recuperar_empresas_relacionadas('00837999000128'))
-
-print('Testando DaoTipologias().existe_cadastro_para_cnpj():')
-print(DaoTipologias().existe_cadastro_para_cnpj('02482618000160'))
-
-print('Testando DaoTipologias().existe_contratacao_por_estado_ou_municipio():')
-print(DaoTipologias().existe_contratacao_por_estado_ou_municipio('20416210000172'))
