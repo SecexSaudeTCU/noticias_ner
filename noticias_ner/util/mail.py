@@ -38,18 +38,28 @@ def enviar_email(arquivos, assunto, text, html):
     #     server.sendmail(sender_email, receiver_email.split(','), text)
     # Try to log in to server and send email
     try:
+        print('servidor:')
+        print(servidor_smtp)
+        print('porta:')
+        print(porta)
         server = smtplib.SMTP(servidor_smtp, porta)
-        server.ehlo()  # Can be omitted
-        server.starttls(context=context)  # Secure the connection
-        server.ehlo()  # Can be omitted
-        #server.login(sender_email, password)
-        # TODO: Send email here
-        server.sendmail(sender_email, receiver_email.split(','), text)
+        # print('Executou server = smtplib.SMTP(servidor_smtp, porta)')
+        # server.ehlo()  # Can be omitted
+        # print('Executou server.ehlo()')
+        # server.starttls(context=context)  # Secure the connection
+        # print('Executou server.starttls(context=context)')
+        # server.ehlo()  # Can be omitted
+        # print('Executou server.ehlo()')
+        # #server.login(sender_email, password)
+        # # TODO: Send email here
+        # server.sendmail(sender_email, receiver_email.split(','), text)
+        # print('server.sendmail(sender_email, receiver_email.split(','), text)')
     #except Exception as e:
         # Print any error messages to stdout
     #    print(e)
     finally:
         server.quit()
+        print('Executou server.quit()')
 
 
 def __criar_mensagem(arquivos, assunto, html, receiver_email, sender_email, text):
