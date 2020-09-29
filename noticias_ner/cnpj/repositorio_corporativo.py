@@ -1,10 +1,16 @@
 import json
+import os
 import re
+import sys
 from collections import defaultdict
 
 import pyodbc
 import requests
 import unidecode
+
+# Adiciona diretorio raiz ao PATH. Devido a ausência de setup.py, isto garante que as importações sempre funcionarão
+diretorio_raiz = os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir)
+sys.path.append(diretorio_raiz)
 
 from noticias_ner.cnpj import fabrica_provedor_cnpj
 from noticias_ner.cnpj.api_lucene import buscar_em_api_lucene
