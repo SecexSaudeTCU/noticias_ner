@@ -14,7 +14,7 @@ sys.path.append(diretorio_raiz)
 
 from noticias_ner.cnpj import fabrica_provedor_cnpj
 from noticias_ner.cnpj.api_lucene import buscar_em_api_lucene
-from noticias_ner.cnpj.dao import DaoRFB
+from noticias_ner.cnpj.dao import DaoRFB, DaoBase
 from noticias_ner.cnpj.repositorio import RepositorioCNPJ
 
 
@@ -172,7 +172,7 @@ class DaoRFB_BuscaTextualCorporativa(DaoRFB):
         return resultado
 
 
-class DaoTipologias:
+class DaoTipologias(DaoBase):
     def __get_conexao(self):
         conn = pyodbc.connect('DRIVER={' + self.cfg.get("bd", "driver") + '};' +
                               f'SERVER={self.cfg.get("bd", "server")};'
