@@ -36,7 +36,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         query = sys.argv[1][2:]
 
-        if len(sys.argv) >= 3:
+        if len(sys.argv) >= 3 and '-d' in sys.argv[2]:
             data_inicial = sys.argv[2][2:]
 
     # Baixa as notícias da Web
