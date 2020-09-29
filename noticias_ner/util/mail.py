@@ -45,9 +45,9 @@ def enviar_email(arquivos, assunto, text, html):
         #server.login(sender_email, password)
         # TODO: Send email here
         server.sendmail(sender_email, receiver_email.split(','), text)
-    except Exception as e:
+    #except Exception as e:
         # Print any error messages to stdout
-        print(e)
+    #    print(e)
     finally:
         server.quit()
 
