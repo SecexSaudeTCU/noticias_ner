@@ -27,9 +27,23 @@ def enviar_email(arquivos, assunto, text, html):
     # Autentica-se no servidor utilizando contexto seguro e envia o e-mail
     context = ssl.create_default_context()
 
-    with smtplib.SMTP_SSL(servidor_smtp, porta, context=context) as server:
-        server.login(sender_email, credencial)
+    # with smtplib.SMTP_SSL(servidor_smtp, porta, context=context) as server:
+    #     server.login(sender_email, credencial)
+    #     server.sendmail(sender_email, receiver_email.split(','), text)
+    # Try to log in to server and send email
+    try:
+        server = smtplib.SMTP(servidor_smtp, porta)
+        server.ehlo()  # Can be omitted
+        server.starttls(context=context)  # Secure the connection
+        server.ehlo()  # Can be omitted
+        #server.login(sender_email, password)
+        # TODO: Send email here
         server.sendmail(sender_email, receiver_email.split(','), text)
+    except Exception as e:
+        # Print any error messages to stdout
+        print(e)
+    finally:
+        server.quit()
 
 
 def __criar_mensagem(arquivos, assunto, html, receiver_email, sender_email, text):
