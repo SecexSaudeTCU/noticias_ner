@@ -25,38 +25,15 @@ def enviar_email(arquivos, assunto, text, html):
     :return:
     """
     credencial, porta, receiver_email, sender_email, servidor_smtp = __get_configuracoes()
-
     message = __criar_mensagem(arquivos, assunto, html, receiver_email, sender_email, text)
-
     text = message.as_string()
 
-    # Autentica-se no servidor utilizando contexto seguro e envia o e-mail
-    context = ssl.create_default_context()
-
-    # with smtplib.SMTP_SSL(servidor_smtp, porta, context=context) as server:
-    #     server.login(sender_email, credencial)
-    #     server.sendmail(sender_email, receiver_email.split(','), text)
-    # Try to log in to server and send email
     try:
-        print('servidor:')
-        print(servidor_smtp)
-        print('porta:')
-        print(porta)
         server = smtplib.SMTP(servidor_smtp, porta)
-        print('Executou server = smtplib.SMTP(servidor_smtp, porta)')
-        server.ehlo()  # Can be omitted
-        print('Executou server.ehlo()')
-        #server.starttls(context=context)  # Secure the connection
-        #print('Executou server.starttls(context=context)')
-        server.ehlo()  # Can be omitted
-        print('Executou server.ehlo()')
-        #server.login(sender_email, password)
-        # TODO: Send email here
         server.sendmail(sender_email, receiver_email.split(','), text)
-        print('server.sendmail(sender_email, receiver_email.split(','), text)')
-    #except Exception as e:
+    except Exception as e:
         # Print any error messages to stdout
-    #    print(e)
+        print(e)
     finally:
         server.quit()
         print('Executou server.quit()')
@@ -111,5 +88,6 @@ def __get_configuracoes():
     porta = cfg.get('mail', 'port')
     credencial = cfg.get('mail', 'sender_pwd')
     return credencial, porta, receiver_email, sender_email, servidor_smtp
+
 
 enviar_email([], 'teste', 'bla bla bla', 'bla bla bla')
