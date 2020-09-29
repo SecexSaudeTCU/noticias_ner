@@ -88,6 +88,3 @@ def __get_configuracoes():
     porta = cfg.get('mail', 'port')
     credencial = cfg.get('mail', 'sender_pwd')
     return credencial, porta, receiver_email, sender_email, servidor_smtp
-
-
-enviar_email([], 'teste', 'bla bla bla', 'bla bla bla')
