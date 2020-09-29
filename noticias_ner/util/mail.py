@@ -46,8 +46,8 @@ def enviar_email(arquivos, assunto, text, html):
         print('Executou server = smtplib.SMTP(servidor_smtp, porta)')
         server.ehlo()  # Can be omitted
         print('Executou server.ehlo()')
-        server.starttls(context=context)  # Secure the connection
-        print('Executou server.starttls(context=context)')
+        #server.starttls(context=context)  # Secure the connection
+        #print('Executou server.starttls(context=context)')
         server.ehlo()  # Can be omitted
         print('Executou server.ehlo()')
         #server.login(sender_email, password)
