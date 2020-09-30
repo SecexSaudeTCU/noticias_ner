@@ -52,4 +52,5 @@ if __name__ == '__main__':
         # Receita Federal
         arquivo_final = identificar_possiveis_empresas_citadas(os.path.join(config.diretorio_dados, 'ner.xlsx'),
                                                                filtrar_por_empresas_unicas=True)
-        __enviar_email_com_resultados([arquivo_entidades, arquivo_final], dia_inicio)
+        __enviar_email_com_resultados([(arquivo_entidades, 'ner.xlsx'), (arquivo_final, 'com_empresas.xlsx')],
+                                      dia_inicio)

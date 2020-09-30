@@ -57,7 +57,7 @@ def __criar_mensagem(arquivos, assunto, html, receiver_email, sender_email, text
 
 
 def __anexar_arquivos(arquivos, message):
-    for arquivo in arquivos:
+    for arquivo, nome_arquivo in arquivos:
         # Abre o arquivo a ser anexado em modo binário
         with open(arquivo, "rb") as attachment:
             # Adiciona o arquivo como application/octet-stream
@@ -68,8 +68,6 @@ def __anexar_arquivos(arquivos, message):
         # Codifica o arquivo em caracteres ASCII para envia-lo por e-mail
         encoders.encode_base64(part)
 
-        filename = str(arquivo)
-        nome_arquivo = filename[filename.rfind(os.path.pathsep) + 1:]
         part.add_header(
             "Content-Disposition",
             f"attachment; filename= {nome_arquivo}",
