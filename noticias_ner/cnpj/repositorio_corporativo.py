@@ -59,10 +59,12 @@ class RepositorioCNPJCorporativo(RepositorioCNPJ):
                 empresas_relacionadas = daoRFB.recuperar_empresas_relacionadas(cnpj)
 
                 for empresa in empresas_relacionadas:
-                    if daoTipologias.existe_contratacao_por_estado_ou_municipio(empresa):
+                    cnpj_relacionado = empresa[0]
+
+                    if daoTipologias.existe_contratacao_por_estado_ou_municipio(cnpj_relacionado):
                         #Se já não estiver na tabela da primeira tipologia (TODO: Checar esta regra)
-                        if not daoTipologias.existe_cadastro_para_cnpj(empresa):
-                            daoTipologias.inserir_cnpj_em_lista_empresas_relacionadas(empresa)
+                        if not daoTipologias.existe_cadastro_para_cnpj(cnpj_relacionado):
+                            daoTipologias.inserir_cnpj_em_lista_empresas_relacionadas(cnpj_relacionado)
 
 
 class DaoRFB_SQLServer(DaoRFB):
@@ -186,7 +188,7 @@ class DaoTipologias(DaoBase):
 
     def existe_contratacao_por_estado_ou_municipio(self, cnpj):
         conexao = self.__get_conexao()
-        print('CNPJ = ' + str(cnpj))
+
         with conexao:
             c = conexao.cursor()
             cursor = c.execute(
