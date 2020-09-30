@@ -62,7 +62,9 @@ class RepositorioCNPJCorporativo(RepositorioCNPJ):
                     cnpj_relacionado = empresa[0]
 
                     # Se já não estiver na tabela da primeira tipologia
-                    if not daoTipologias.existe_cadastro_para_cnpj(cnpj_relacionado):
+                    if not daoTipologias.existe_cadastro_para_cnpj(
+                            cnpj_relacionado) and not daoTipologias.existe_cadastro_para_cnpj_relacionado(
+                            cnpj_relacionado):
                         daoTipologias.inserir_cnpj_em_lista_empresas_relacionadas(cnpj_relacionado)
 
 
@@ -185,13 +187,23 @@ class DaoTipologias(DaoBase):
             resultado = cursor.fetchall()
             return len(resultado) > 0
 
+    def existe_cadastro_para_cnpj_relacionado(self, cnpj):
+        conexao = self.__get_conexao()
+
+        with conexao:
+            c = conexao.cursor()
+            cursor = c.execute(
+                "SELECT * FROM [BDU_SGI].[covidata].[CVDT_FRE05_Resultado_DEV] WHERE CNPJ = ?", (cnpj,))
+            resultado = cursor.fetchall()
+            return len(resultado) > 0
+
     def inserir_cnpj_em_lista_empresas_citadas(self, cnpj):
         conexao = self.__get_conexao()
 
         with conexao:
             c = conexao.cursor()
             c.execute(
-                "INSERT INTO [BDU_SGI].[covidata].[CVDT_FRE04_Resultado_DEV] (TIPOLOGIA, CNPJ, OCORRENCIAS) VALUES(?,?,?)",
+                "INSERT INTO [BDU_SGI].[covidata].[CVDT_FRE04_Resultado] (TIPOLOGIA, CNPJ, OCORRENCIAS) VALUES(?,?,?)",
                 ('CVDT_FRE04', cnpj, 1))
             c.commit()
 
@@ -201,6 +213,6 @@ class DaoTipologias(DaoBase):
         with conexao:
             c = conexao.cursor()
             c.execute(
-                "INSERT INTO [BDU_SGI].[covidata].[CVDT_FRE05_Resultado_DEV] (TIPOLOGIA, CNPJ, OCORRENCIAS) VALUES(?,?,?)",
+                "INSERT INTO [BDU_SGI].[covidata].[CVDT_FRE05_Resultado] (TIPOLOGIA, CNPJ, OCORRENCIAS) VALUES(?,?,?)",
                 ('CVDT_FRE05', cnpj, 1))
             c.commit()
