@@ -186,7 +186,7 @@ class DaoTipologias(DaoBase):
 
     def existe_contratacao_por_estado_ou_municipio(self, cnpj):
         conexao = self.__get_conexao()
-
+        print('CNPJ = ' + str(cnpj))
         with conexao:
             c = conexao.cursor()
             cursor = c.execute(
