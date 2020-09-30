@@ -47,20 +47,22 @@ class RepositorioCNPJCorporativo(RepositorioCNPJ):
 
     def persistir_informacoes(self, df):
         super().persistir_informacoes(df)
-        # listas_cnpjs = df['POSSÍVEIS CNPJs CITADOS']
-        # daoTipologias = DaoTipologias()
-        # daoRFB = DaoRFB_SQLServer()
-        #
-        # for lista_cnpj in listas_cnpjs:
-        #     for cnpj in lista_cnpj:
-        #         if not daoTipologias.existe_cadastro_para_cnpj(cnpj):
-        #             daoTipologias.inserir_cnpj_em_lista_empresas_citadas(cnpj)
-        #
-        #         empresas_relacionadas = daoRFB.recuperar_empresas_relacionadas(cnpj)
-        #
-        #         for empresa in empresas_relacionadas:
-        #             if daoTipologias.existe_contratacao_por_estado_ou_municipio(empresa):
-        #                 daoTipologias.inserir_cnpj_em_lista_empresas_relacionadas(empresa)
+        listas_cnpjs = df['POSSÍVEIS CNPJs CITADOS']
+        daoTipologias = DaoTipologias()
+        daoRFB = DaoRFB_SQLServer()
+
+        for lista_cnpj in listas_cnpjs:
+            for cnpj in lista_cnpj:
+                if not daoTipologias.existe_cadastro_para_cnpj(cnpj):
+                    daoTipologias.inserir_cnpj_em_lista_empresas_citadas(cnpj)
+
+                empresas_relacionadas = daoRFB.recuperar_empresas_relacionadas(cnpj)
+
+                for empresa in empresas_relacionadas:
+                    if daoTipologias.existe_contratacao_por_estado_ou_municipio(empresa):
+                        #Se já não estiver na tabela da primeira tipologia (TODO: Checar esta regra)
+                        if not daoTipologias.existe_cadastro_para_cnpj(empresa):
+                            daoTipologias.inserir_cnpj_em_lista_empresas_relacionadas(empresa)
 
 
 class DaoRFB_SQLServer(DaoRFB):
@@ -108,9 +110,9 @@ class DaoRFB_SQLServer(DaoRFB):
         with conexao:
             c = conexao.cursor()
             cursor = c.execute(
-                "SELECT distinct NUM_CNPJ_EMPRESA FROM [BD_RECEITA_HIST].[dbo].[SOCIO] WHERE NUM_CPF IN "
-                "(SELECT NUM_CPF FROM [BD_RECEITA_HIST].[dbo].[SOCIO] WHERE NUM_CNPJ_EMPRESA = ?)",
-                (cnpj,))
+                "SELECT distinct NUM_CNPJ_EMPRESA FROM [BD_RECEITA].[dbo].[SOCIO] WHERE NUM_CPF IN "
+                "(SELECT NUM_CPF FROM [BD_RECEITA].[dbo].[SOCIO] WHERE NUM_CNPJ_EMPRESA = ?) AND NUM_CNPJ_EMPRESA <> ?",
+                (cnpj, cnpj))
             resultado = cursor.fetchall()
 
         return resultado
@@ -178,7 +180,7 @@ class DaoTipologias(DaoBase):
         with conexao:
             c = conexao.cursor()
             cursor = c.execute(
-                "SELECT * FROM [BDU_SGI].[covidata].[CVDT_FRE04_Resultado] WHERE CNPJ = ?", (cnpj,))
+                "SELECT * FROM [BDU_SGI].[covidata].[CVDT_FRE04_Resultado_DEV] WHERE CNPJ = ?", (cnpj,))
             resultado = cursor.fetchall()
             return len(resultado) > 0
 
@@ -198,7 +200,7 @@ class DaoTipologias(DaoBase):
         with conexao:
             c = conexao.cursor()
             c.execute(
-                "INSERT INTO [BDU_SGI].[covidata].[CVDT_FRE04_Resultado] (TIPOLOGIA, CNPJ, OCORRENCIAS) VALUES(?,?,?)",
+                "INSERT INTO [BDU_SGI].[covidata].[CVDT_FRE04_Resultado_DEV] (TIPOLOGIA, CNPJ, OCORRENCIAS) VALUES(?,?,?)",
                 ('CVDT_FRE04', cnpj, 1))
             c.commit()
 
@@ -208,6 +210,6 @@ class DaoTipologias(DaoBase):
         with conexao:
             c = conexao.cursor()
             c.execute(
-                "INSERT INTO [BDU_SGI].[covidata].[CVDT_FRE05_Resultado] (TIPOLOGIA, CNPJ, OCORRENCIAS) VALUES(?,?,?)",
+                "INSERT INTO [BDU_SGI].[covidata].[CVDT_FRE05_Resultado_DEV] (TIPOLOGIA, CNPJ, OCORRENCIAS) VALUES(?,?,?)",
                 ('CVDT_FRE05', cnpj, 1))
             c.commit()
