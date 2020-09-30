@@ -69,7 +69,7 @@ def __anexar_arquivos(arquivos, message):
         encoders.encode_base64(part)
 
         filename = str(arquivo)
-        nome_arquivo = filename[filename.rfind('\\') + 1:len(filename)]
+        nome_arquivo = filename[filename.rfind(os.path.pathsep) + 1:]
         part.add_header(
             "Content-Disposition",
             f"attachment; filename= {nome_arquivo}",
