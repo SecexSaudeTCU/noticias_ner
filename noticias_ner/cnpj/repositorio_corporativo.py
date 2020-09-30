@@ -61,10 +61,9 @@ class RepositorioCNPJCorporativo(RepositorioCNPJ):
                 for empresa in empresas_relacionadas:
                     cnpj_relacionado = empresa[0]
 
-                    if daoTipologias.existe_contratacao_por_estado_ou_municipio(cnpj_relacionado):
-                        #Se já não estiver na tabela da primeira tipologia (TODO: Checar esta regra)
-                        if not daoTipologias.existe_cadastro_para_cnpj(cnpj_relacionado):
-                            daoTipologias.inserir_cnpj_em_lista_empresas_relacionadas(cnpj_relacionado)
+                    # Se já não estiver na tabela da primeira tipologia
+                    if not daoTipologias.existe_cadastro_para_cnpj(cnpj_relacionado):
+                        daoTipologias.inserir_cnpj_em_lista_empresas_relacionadas(cnpj_relacionado)
 
 
 class DaoRFB_SQLServer(DaoRFB):
@@ -183,16 +182,6 @@ class DaoTipologias(DaoBase):
             c = conexao.cursor()
             cursor = c.execute(
                 "SELECT * FROM [BDU_SGI].[covidata].[CVDT_FRE04_Resultado_DEV] WHERE CNPJ = ?", (cnpj,))
-            resultado = cursor.fetchall()
-            return len(resultado) > 0
-
-    def existe_contratacao_por_estado_ou_municipio(self, cnpj):
-        conexao = self.__get_conexao()
-
-        with conexao:
-            c = conexao.cursor()
-            cursor = c.execute(
-                "SELECT * FROM [BDU_SGI].[covidata].[DADOS_TRATADOS] WHERE CONTRATADO_CNPJ = ?", (cnpj,))
             resultado = cursor.fetchall()
             return len(resultado) > 0
 
