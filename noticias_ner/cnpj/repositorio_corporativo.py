@@ -183,7 +183,7 @@ class DaoTipologias(DaoBase):
         with conexao:
             c = conexao.cursor()
             cursor = c.execute(
-                "SELECT * FROM [BDU_SGI].[covidata].[CVDT_FRE04_Resultado_DEV] WHERE CNPJ = ?", (cnpj,))
+                "SELECT * FROM [BDU_SGI].[covidata].[CVDT_FRE04_Resultado] WHERE CNPJ = ?", (cnpj,))
             resultado = cursor.fetchall()
             return len(resultado) > 0
 
@@ -193,7 +193,7 @@ class DaoTipologias(DaoBase):
         with conexao:
             c = conexao.cursor()
             cursor = c.execute(
-                "SELECT * FROM [BDU_SGI].[covidata].[CVDT_FRE05_Resultado_DEV] WHERE CNPJ = ?", (cnpj,))
+                "SELECT * FROM [BDU_SGI].[covidata].[CVDT_FRE05_Resultado] WHERE CNPJ = ?", (cnpj,))
             resultado = cursor.fetchall()
             return len(resultado) > 0
 
