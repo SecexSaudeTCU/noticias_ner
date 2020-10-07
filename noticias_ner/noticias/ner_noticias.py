@@ -4,7 +4,7 @@ from collections import Counter
 import pandas as pd
 
 from noticias_ner.municipios.ibge import get_map_municipios_estados, get_ufs
-from noticias_ner.noticias.ner.ner_base import ExtratorEntidades
+from noticias_ner.ner.ner_base import ExtratorEntidades
 
 
 class ExtratorEntidadesNoticias(ExtratorEntidades):

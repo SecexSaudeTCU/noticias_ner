@@ -29,7 +29,7 @@ if __name__ == '__main__':
     data_inicial = None
 
     if len(sys.argv) == 1:
-        print('Exemplo de execução: main.py -t"<texto da consulta>" -d"<data inicial>"')
+        print('Exemplo de execução: main_noticias.py -t"<texto da consulta>" -d"<data inicial>"')
         exit()
 
     if len(sys.argv) > 1:

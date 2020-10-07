@@ -65,7 +65,8 @@ def pre_processar_texto(texto, tokenizer, max_len):
     # Aparantemente, o tokenizador está com um comportamento não determinístico que faz com que mesmo quebranto textos
     # que tenham uma quantidade de tokens além do suportado, ainda assim os subtextos resultantes tenham mais de max_len
     # tokens.  Assim, estou adicionando uma margem de segurança.
-    margem = 100
+    #margem = 100
+    margem = 200 #TODO para relatórios CGU (parametrizar)
     max_len -= margem
 
     for token in tokens:

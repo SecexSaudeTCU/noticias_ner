@@ -3,8 +3,8 @@ from pandas.io.common import stringify_path
 from transformers import pipeline, BertForTokenClassification, DistilBertTokenizerFast
 
 from noticias_ner import config
-from noticias_ner.noticias.ner.bert.bert_utils import pre_processar_texto
-from noticias_ner.noticias.ner.ner_base import NER
+from noticias_ner.ner.bert.bert_utils import pre_processar_texto
+from noticias_ner.ner.ner_base import NER
 
 
 class BaseBERT_NER(NER):

@@ -3,14 +3,12 @@ import os
 import time
 
 import pandas as pd
+from backports.datetime_fromisoformat import MonkeyPatch
 
 from noticias_ner import config
 from noticias_ner.ner.bert.bert_ner import FinedTunedBERT_NER
-from noticias_ner.noticias.gnews import executar_busca
-from noticias_ner.noticias.ner_noticias import ExtratorEntidadesNoticias
-from noticias_ner.noticias.parse_news import recuperar_textos
+from noticias_ner.ner_relatorios_cgu import ExtratorEntidadesRelatoriosCGU
 
-from backports.datetime_fromisoformat import MonkeyPatch
 MonkeyPatch.patch_fromisoformat()
 
 
@@ -30,11 +28,11 @@ def extrair_entidades(arquivo):
     logger = logging.getLogger('covidata')
     df = pd.read_excel(arquivo)
 
-    logger.info('Extraindo entidades relevantes das notícias...')
+    logger.info('Extraindo entidades relevantes dos relatórios...')
     ners = __get_NERs()
     caminho_arquivo = os.path.join(config.diretorio_dados, 'ner.xlsx')
     writer = pd.ExcelWriter(caminho_arquivo, engine='xlsxwriter')
-    extrator_entidades = ExtratorEntidadesNoticias()
+    extrator_entidades = ExtratorEntidadesRelatoriosCGU()
 
     for ner in ners:
         algoritmo = ner.get_nome_algoritmo()
@@ -47,21 +45,3 @@ def extrair_entidades(arquivo):
     writer.save()
     logger.info('Processamento concluído.')
     return caminho_arquivo
-
-
-def obter_textos(q, data_inicial=None):
-    """
-    Obtém os textos de notícias da Internet.
-    :param q: Query string a ser encaminhada à busca do Google News.
-    :param data_inicial: Data inicial de publicação pela qual as notícias serão pesquisadas.  Valor padrão: 2020-04-01.
-    :return:
-    """
-    logger = logging.getLogger('covidata')
-    logger.setLevel(logging.INFO)
-    logger.addHandler(logging.StreamHandler())
-    start_time = time.time()
-    logger.info('Buscando as notícias na Internet...')
-    arquivo_noticias, dia_inicio = executar_busca(data_inicial, q)
-    recuperar_textos(arquivo_noticias)
-    logger.info("--- %s minutos ---" % ((time.time() - start_time) / 60))
-    return dia_inicio
