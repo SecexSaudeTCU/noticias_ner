@@ -7,6 +7,7 @@ import pandas as pd
 from noticias_ner import config
 from noticias_ner.noticias.gnews import executar_busca
 from noticias_ner.noticias.ner.bert.bert_ner import FinedTunedBERT_NER
+from noticias_ner.noticias.ner.ner_noticias import ExtratorEntidadesNoticias
 from noticias_ner.noticias.parse_news import recuperar_textos
 
 from backports.datetime_fromisoformat import MonkeyPatch
@@ -33,12 +34,13 @@ def extrair_entidades(arquivo):
     ners = __get_NERs()
     caminho_arquivo = os.path.join(config.diretorio_dados, 'ner.xlsx')
     writer = pd.ExcelWriter(caminho_arquivo, engine='xlsxwriter')
+    extrator_entidades = ExtratorEntidadesNoticias()
 
     for ner in ners:
         algoritmo = ner.get_nome_algoritmo()
         logger.info('Aplicando implementação ' + algoritmo)
         start_time = time.time()
-        df_resultado = ner.extrair_entidades(df)
+        df_resultado = extrator_entidades.extrair_entidades(df, ner)
         logger.info("--- %s segundos ---" % (time.time() - start_time))
         df_resultado.to_excel(writer, sheet_name=algoritmo)
 
