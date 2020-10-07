@@ -45,7 +45,7 @@ def pre_processar_tokens(tokens, tags, tokenizer, max_len):
     return token_docs, tag_docs
 
 
-def pre_processar_texto(texto, tokenizer, max_len):
+def pre_processar_texto(texto, tokenizer, max_len, margem=100):
     """
     Pré-processa um texto, quebrando textos com quantidade de tokens superior a um limite especificado
     em conjuntos de textos menores.
@@ -65,8 +65,6 @@ def pre_processar_texto(texto, tokenizer, max_len):
     # Aparantemente, o tokenizador está com um comportamento não determinístico que faz com que mesmo quebranto textos
     # que tenham uma quantidade de tokens além do suportado, ainda assim os subtextos resultantes tenham mais de max_len
     # tokens.  Assim, estou adicionando uma margem de segurança.
-    #margem = 100
-    margem = 200 #TODO para relatórios CGU (parametrizar)
     max_len -= margem
 
     for token in tokens:

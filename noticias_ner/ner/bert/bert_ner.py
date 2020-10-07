@@ -27,7 +27,7 @@ class BaseBERT_NER(NER):
     def _get_map_labels(self):
         return self.map_labels
 
-    def _extrair_entidades_de_texto(self, texto):
+    def _extrair_entidades_de_texto(self, texto, margem=100):
         if texto.strip() != '':
             # Respeitando o tamanho máximo de sequência para o qual o modelo foi originalmente treinado, quebra em
             # diferentes documentos quanto forem necessários.
@@ -36,7 +36,7 @@ class BaseBERT_NER(NER):
             max_len -= self.nlp.tokenizer.num_special_tokens_to_add()
 
             if len(tokens) > max_len:
-                textos = pre_processar_texto(texto, self.nlp.tokenizer, max_len)
+                textos = pre_processar_texto(texto, self.nlp.tokenizer, max_len, margem)
                 retornos = []
 
                 for subtexto in textos:

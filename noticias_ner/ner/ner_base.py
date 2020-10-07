@@ -44,7 +44,7 @@ class NER(ABC):
         return self.__class__.__name__
 
     @abstractmethod
-    def _extrair_entidades_de_texto(self, texto):
+    def _extrair_entidades_de_texto(self, texto, margem=100):
         """
         Retorna as entidades encontradas em um texto específico.
 

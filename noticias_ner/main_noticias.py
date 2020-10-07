@@ -7,7 +7,7 @@ sys.path.append(diretorio_raiz)
 
 from noticias_ner import config
 from noticias_ner.noticias.extrator_entidades_noticias import obter_textos, extrair_entidades
-from noticias_ner.noticias.identificacao_cnpjs import identificar_possiveis_empresas_citadas
+from noticias_ner.noticias.identificacao_cnpjs_noticias import identificar_possiveis_empresas_citadas
 from noticias_ner.util.mail import enviar_email
 
 
