@@ -47,7 +47,7 @@ class ExtratorEntidadesRelatoriosCGU(ExtratorEntidades):
                 with open(caminho_arquivo_texto, 'r', encoding='utf-8') as arquivo_texto:
                     texto = arquivo_texto.read()
                     print(f'Extraindo entidades texto {i}...')
-                    entidades_texto = ner._extrair_entidades_de_texto(texto, margem=300)
+                    entidades_texto = ner._extrair_entidades_de_texto(texto, margem=350)
                     print("--- %s segundos ---" % (time.time() - start_time))
                     resultado_analise = dict()
                     resultado_analise[(
