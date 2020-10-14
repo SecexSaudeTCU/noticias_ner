@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 from pandas.io.common import stringify_path
 from transformers import pipeline, BertForTokenClassification, DistilBertTokenizerFast
