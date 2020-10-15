@@ -22,7 +22,7 @@ def buscar_constatacoes(file):
                             r'Conclusão \n(.*?)$', r'Conclusão\n(.*?)$', r'CONSOLIDAÇÃO DOS RESULTADOS(.*?)CONCLUSÃO',
                             r'CONSOLIDAÇÃO DOS RESULTADOS(.*?)ANEXO',
                             r'RESULTADO DOS EXAMES(.*?)CONCLUSÃO',
-                            r'CONCLUSÃO \n(.*?)$', r'Detalhamento das Constatações da Fiscalização(.*?)',
+                            r'CONCLUSÃO \n(.*?)$', r'Detalhamento das Constatações da Fiscalização(.*?)$',
                             r'Constatações da Fiscalização(.*?)$', r'Constatação(.*?)Constatação', r'Constatação(.*?)$',
                             r'CONSTATAÇÃO(.*?)CONSTATAÇÃO', r'CONSTATAÇÃO(.*?)$',
                             r' seguintes constatações:(.*?)PRESIDÊNCIA DA REPÚBLICA', r'ÁREA(.*):(.*?)ÁREA(.*)',
