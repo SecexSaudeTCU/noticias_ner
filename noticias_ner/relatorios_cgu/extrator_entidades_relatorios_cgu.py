@@ -7,7 +7,7 @@ from backports.datetime_fromisoformat import MonkeyPatch
 
 from noticias_ner import config
 from noticias_ner.ner.bert.bert_ner import FinedTunedBERT_NER
-from noticias_ner.ner_relatorios_cgu import ExtratorEntidadesRelatoriosCGU
+from noticias_ner.relatorios_cgu.ner_relatorios_cgu import ExtratorEntidadesRelatoriosCGU
 
 MonkeyPatch.patch_fromisoformat()
 
@@ -18,7 +18,7 @@ def __get_NERs():
     ]
 
 
-def extrair_entidades(arquivo):
+def extrair_entidades(arquivo, extrator_entidades=ExtratorEntidadesRelatoriosCGU(), arquivo_saida='ner.xlsx'):
     """
     Extrai as entidade de um arquivo com extensão .xlsx que contém o conjunto de textos a serem analisados, bem como
     seus metadados.  O resultado é salvo em um arquivo XLSX.
@@ -30,9 +30,8 @@ def extrair_entidades(arquivo):
 
     logger.info('Extraindo entidades relevantes dos relatórios...')
     ners = __get_NERs()
-    caminho_arquivo = os.path.join(config.diretorio_dados, 'ner.xlsx')
+    caminho_arquivo = os.path.join(config.diretorio_dados, arquivo_saida)
     writer = pd.ExcelWriter(caminho_arquivo, engine='xlsxwriter')
-    extrator_entidades = ExtratorEntidadesRelatoriosCGU()
 
     for ner in ners:
         algoritmo = ner.get_nome_algoritmo()

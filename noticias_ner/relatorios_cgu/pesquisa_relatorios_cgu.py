@@ -12,7 +12,7 @@ def __download(url, nome_arquivo):
     """
     Executa o download do arquivo.
     """
-    diretorio_relatorios = path.join(config.diretorio_dados, 'relatorios_cgu')
+    diretorio_relatorios = path.join(config.diretorio_dados, '')
     if not path.exists(diretorio_relatorios):
         os.makedirs(diretorio_relatorios)
 
@@ -62,4 +62,4 @@ if __name__ == '__main__':
     colunas_df_metadados = ['ID', 'ID_ARQUIVO', 'LINK', 'TÍTULO', 'TIPO DE_SERVIÇO', 'GRUPO DE ATIVIDADE',
                             'LINHA DE AÇÃO', 'AVALIAÇÃO DE POLÍTICA PÚBLICA', 'PUBLICADO EM', 'LOCALIDADES', 'TRECHOS']
     df_metadados = pd.DataFrame(linhas_df_metadados, columns=colunas_df_metadados)
-    df_metadados.to_excel(os.path.join(config.diretorio_dados, 'relatorios_cgu', 'relatorios_cgu.xlsx'))
+    df_metadados.to_excel(os.path.join(config.diretorio_dados, '', 'relatorios_cgu.xlsx'))

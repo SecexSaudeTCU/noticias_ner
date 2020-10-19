@@ -1,12 +1,10 @@
 import time
-from collections import Counter
+from os import path
 
 import pandas as pd
 
 from noticias_ner import config
-from noticias_ner.municipios.ibge import get_ufs
 from noticias_ner.ner.ner_base import ExtratorEntidades
-from os import path
 
 
 class ExtratorEntidadesRelatoriosCGU(ExtratorEntidades):
@@ -26,7 +24,8 @@ class ExtratorEntidadesRelatoriosCGU(ExtratorEntidades):
         df_final = pd.DataFrame()
 
         for i in range(0, len(df)):
-            nome_arquivo = f'ner_{i}.xlsx'
+            diretorio = config.diretorio_dados.joinpath('relatorios_cgu').joinpath('ner')
+            nome_arquivo = path.join(diretorio, f'ner_{i}.xlsx')
 
             if not path.exists(nome_arquivo):
                 id = df.loc[i, 'ID']
@@ -65,32 +64,45 @@ class ExtratorEntidadesRelatoriosCGU(ExtratorEntidades):
 
         return df_final
 
-    def __inferir_uf_ocorrencia(self, entidades_texto):
-        ufs = get_ufs()
-        siglas = set(ufs.values())
-        cnt = Counter()
 
-        for entidade, tipo in entidades_texto:
-            if tipo == 'LOCAL':
-                nome_local = entidade.strip().upper()
-                # Pode ser referência a UF
-                if len(nome_local) == 2:
-                    if nome_local in siglas:
-                        cnt[entidade] += 1
-                elif nome_local in ufs:
-                    cnt[ufs[nome_local]] += 1
-                else:
-                    estados = self.map_municipios_estados[nome_local]
-                    for estado in estados:
-                        cnt[estado] += 1
+class ExtratorEntidadesConstatacoes(ExtratorEntidades):
+    """
+    Classe-base para implementações (algoritmos) específicas de reconhecimento de entidades nomeadas (named entity
+    recognition - NER).
+    """
 
-        common = cnt.most_common()
-        max = -1
+    def extrair_entidades(self, df, ner):
+        """
+        Retorna as entidades encontradas nos textos contidos no dataframe passado como parâmetro.
 
-        if len(common) > 0:
-            max = common[0][1]
+        :param df Dataframe que contém os textos e seus respectivos metadados.
+        :return Dataframe preenchido com as entidades encontradas.
+        """
+        df = df.fillna('N/A')
+        df_final = pd.DataFrame()
 
-        # Retorna as UFs mais citadas
-        ufs = [uf for uf, qtd in common if qtd == max]
+        for i in range(0, len(df)):
+            diretorio = config.diretorio_dados.joinpath('relatorios_cgu').joinpath('ner').joinpath('constatacoes')
+            nome_arquivo = path.join(diretorio, f'ner_{i}.xlsx')
 
-        return ufs
+            if not path.exists(nome_arquivo):
+                arquivo = df.loc[i, 'ARQUIVO']
+                constatacoes = df.loc[i, 'CONSTATAÇÕES']
+                start_time = time.time()
+
+                if len(constatacoes.strip()) > 0:
+                    print(f'Extraindo entidades texto {i}...')
+                    entidades_texto = ner._extrair_entidades_de_texto(constatacoes, margem=350)
+                    print("--- %s segundos ---" % (time.time() - start_time))
+                    resultado_analise = dict()
+                    resultado_analise[(arquivo, constatacoes)] = entidades_texto
+
+                    df_gerado = pd.concat(
+                        {k: pd.DataFrame(v, columns=['ENTIDADE', 'CLASSIFICAÇÃO']) for k, v in resultado_analise.items()})
+
+                    # Salva os resultados intermediários
+                    df_gerado.to_excel(nome_arquivo)
+
+                    df_final = df_final.append(df_gerado)
+
+        return df_final
