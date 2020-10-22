@@ -20,14 +20,20 @@ def identificar_possiveis_empresas_citadas(caminho_arquivo, filtrar_por_empresas
     """
     df = pd.read_excel(caminho_arquivo)
     resultado_analise = dict()
-    data = link = midia = texto = titulo = ufs = None
+    fiscalis = num_processo = url = tipo_peca = data = id_arq_catalogado = versao = None
     repositorio_cnpj = get_repositorio_cnpj()
 
     for i in range(len(df)):
-        classificacao, entidade, (data, link, midia, texto, titulo, ufs) = __get_valores(df, i, data, link, midia, texto, titulo, ufs)
+        classificacao, entidade, (
+            fiscalis, num_processo, url, tipo_peca, data, id_arq_catalogado, versao) = __get_valores(df, i, fiscalis,
+                                                                                                     num_processo, url,
+                                                                                                     tipo_peca, data,
+                                                                                                     id_arq_catalogado,
+                                                                                                     versao)
 
         adicionar_aos_resultados(classificacao, entidade, filtrar_por_empresas_unicas, repositorio_cnpj,
-                                 resultado_analise, (data, link, midia, texto, titulo, ufs))
+                                 resultado_analise,
+                                 (fiscalis, num_processo, url, tipo_peca, data, id_arq_catalogado, versao))
 
     persistir_informacoes(repositorio_cnpj, resultado_analise)
 
@@ -37,26 +43,28 @@ def identificar_possiveis_empresas_citadas(caminho_arquivo, filtrar_por_empresas
     return config.arquivo_gerado_final
 
 
-def __get_valores(df, i, data, link, midia, texto, titulo, uf):
-    if not pd.isna(df.iloc[i, 0]):
-        titulo = df.iloc[i, 0]
+def __get_valores(df, i, fiscalis, num_processo, url, tipo_peca, data, id_arq_catalogado, versao):
     if not pd.isna(df.iloc[i, 1]):
-        link = df.iloc[i, 1]
+        fiscalis = df.iloc[i, 1]
     if not pd.isna(df.iloc[i, 2]):
-        midia = df.iloc[i, 2]
+        num_processo = df.iloc[i, 2]
     if not pd.isna(df.iloc[i, 3]):
-        data = df.iloc[i, 3]
+        url = df.iloc[i, 3]
     if not pd.isna(df.iloc[i, 4]):
-        texto = df.iloc[i, 4]
+        tipo_peca = df.iloc[i, 4]
     if not pd.isna(df.iloc[i, 5]):
-        uf = df.iloc[i, 5]
+        data = df.iloc[i, 5]
+    if not pd.isna(df.iloc[i, 6]):
+        id_arq_catalogado = df.iloc[i, 6]
+    if not pd.isna(df.iloc[i, 7]):
+        versao = df.iloc[i, 7]
 
-    entidade = df.iloc[i, 7]
-    classificacao = df.iloc[i, 8]
+    entidade = df.iloc[i, 9]
+    classificacao = df.iloc[i, 10]
 
-    return classificacao, entidade, (data, link, midia, texto, titulo, uf)
+    return classificacao, entidade, (fiscalis, num_processo, url, tipo_peca, data, id_arq_catalogado, versao)
 
 
 if __name__ == '__main__':
-    identificar_possiveis_empresas_citadas(os.path.join(config.diretorio_dados, 'ner.xlsx'),
+    identificar_possiveis_empresas_citadas(config.diretorio_dados.joinpath('ner_tcu.xlsx'),
                                            filtrar_por_empresas_unicas=True)

@@ -1,31 +1,11 @@
 import json
 import os
-from os import path
 
 import pandas as pd
 import requests
 
 from noticias_ner import config
-
-
-def __download(url, nome_arquivo):
-    """
-    Executa o download do arquivo.
-    """
-    diretorio_relatorios = path.join(config.diretorio_dados, '')
-    if not path.exists(diretorio_relatorios):
-        os.makedirs(diretorio_relatorios)
-
-    caminho_arquivo = os.path.join(diretorio_relatorios, nome_arquivo)
-
-    if not os.path.exists(caminho_arquivo):
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) '
-                          'Chrome/50.0.2661.102 Safari/537.36'}
-        r = requests.get(url, headers=headers, verify=False, timeout=60)
-        if r.status_code != 500:
-            with open(caminho_arquivo, 'wb') as f:
-                f.write(r.content)
+from noticias_ner.util.download import download
 
 
 def __processar_pagina(offset, linhas_df_metadados):
@@ -38,7 +18,7 @@ def __processar_pagina(offset, linhas_df_metadados):
         id = registro['id']
         url_arquivo = f'https://eaud.cgu.gov.br/relatorios/download/{id}'
         nome_arquivo = f'arquivo_{id}.pdf'
-        __download(url_arquivo, nome_arquivo)
+        download(url_arquivo, config.diretorio_dados.joinpath('relatorios_cgu'), nome_arquivo)
         linha_df_metadados = [id, registro['idArquivo'], url_arquivo, registro['titulo'], registro['tipoServico'],
                               registro['grupoAtividade'], registro['linhaAcao'], registro['avaliacaoPoliticaPublica'],
                               registro['dataPublicacao'], registro['localidades'], registro['trecho']]

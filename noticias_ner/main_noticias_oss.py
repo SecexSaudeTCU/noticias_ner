@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
     # Executa a extração de entidades
     #arquivo_entidades = extrair_entidades(arquivo_saida)
-    arquivo_entidades = extrair_entidades(os.path.join(config.diretorio_dados, 'oss', 'com_textos.xlsx'))
+    #arquivo_entidades = extrair_entidades(os.path.join(config.diretorio_dados, 'oss', 'com_textos.xlsx'))
 
     # Filtra apenas as entidades do tipo ORGANIZAÇÃO e enriquece com nomes de empresas/CNPJs candidatos na base da
     # Receita Federal
