@@ -7,6 +7,8 @@ def adicionar_aos_resultados(classificacao, entidade, filtrar_por_empresas_unica
         # Desconsidera empresas com nome com menos de 3 caracteres - esses casos têm grande chance de serem
         # falso-positivos indicados pelo NER.
         if len(entidade.strip()) > 2:
+            #TODO: Investigar por que o algoritmo está gerando isso...
+            entidade = entidade.replace('[UNK]','')
             map_empresa_to_cnpjs, tipo_busca = repositorio_cnpj.buscar_empresas_por_razao_social(entidade)
             qtd = len(map_empresa_to_cnpjs)
             qtd_cnpjs = 0

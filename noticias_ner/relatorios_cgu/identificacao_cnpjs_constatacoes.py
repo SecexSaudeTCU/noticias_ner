@@ -50,7 +50,5 @@ def __get_valores(df, i, arquivo, constatacao):
 
 
 if __name__ == '__main__':
-    diretorio = config.diretorio_dados.joinpath('relatorios_cgu').joinpath('ner').joinpath('constatacoes')
-    for root, subdirs, files in os.walk(diretorio):
-        for file in files:
-            identificar_possiveis_empresas_citadas(os.path.join(root, file), filtrar_por_empresas_unicas=True)
+    identificar_possiveis_empresas_citadas(config.diretorio_dados.joinpath('ner_constatacoes.xlsx'),
+                                           filtrar_por_empresas_unicas=True)

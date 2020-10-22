@@ -7,7 +7,7 @@ from noticias_ner.municipios.ibge import get_map_municipios_estados, get_ufs
 from noticias_ner.ner.ner_base import ExtratorEntidades
 
 
-class ExtratorEntidadesNoticias(ExtratorEntidades):
+class ExtratorEntidadesNoticiasOSs(ExtratorEntidades):
     """
     Classe-base para implementações (algoritmos) específicas de reconhecimento de entidades nomeadas (named entity
     recognition - NER).
@@ -31,15 +31,14 @@ class ExtratorEntidadesNoticias(ExtratorEntidades):
 
         for i in range(0, len(df)):
             texto = df.loc[i, 'texto']
-            titulo = df.loc[i, 'title']
-            midia = df.loc[i, 'media']
-            data = df.loc[i, 'date']
+            titulo = df.loc[i, 'TÍTULO']
+            data = df.loc[i, 'data']
+            resumo = df.loc[i, 'resumo']
             link = df.loc[i, 'link']
             start_time = time.time()
             print(f'Extraindo entidades texto {i}...')
             entidades_texto = ner._extrair_entidades_de_texto(titulo + '. ' + texto)
             print("--- %s segundos ---" % (time.time() - start_time))
-            # resultado_analise[(titulo, link, midia, data, texto)] = entidades_texto
 
             # Utiliza heurística para tentar inferir a UF da ocorrência
             print('Identificando UF da ocorrência...')
@@ -55,7 +54,7 @@ class ExtratorEntidadesNoticias(ExtratorEntidades):
             else:
                 uf_ocorrencia = 'N/A'
 
-            resultado_analise[(titulo, link, midia, data, texto, uf_ocorrencia)] = entidades_texto
+            resultado_analise[(titulo, resumo, link, data, texto, uf_ocorrencia)] = entidades_texto
 
         df = pd.concat(
             {k: pd.DataFrame(v, columns=['ENTIDADE', 'CLASSIFICAÇÃO']) for k, v in resultado_analise.items()})

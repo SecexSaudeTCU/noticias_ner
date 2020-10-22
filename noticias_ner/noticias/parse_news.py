@@ -23,7 +23,7 @@ def get_text(url, max_retries=5, sleep=5):
     # Tentar max_retries vezes
     for i in range(0, max_retries):
         try:
-            article = Article(row.link)
+            article = Article(url)
             article.download()
             article.parse()
         except:

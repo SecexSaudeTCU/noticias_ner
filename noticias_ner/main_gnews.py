@@ -6,7 +6,7 @@ diretorio_raiz = os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pa
 sys.path.append(diretorio_raiz)
 
 from noticias_ner import config
-from noticias_ner.noticias.extrator_entidades_noticias import obter_textos, extrair_entidades
+from noticias_ner.noticias.extrator_entidades_gnews import obter_textos, extrair_entidades
 from noticias_ner.noticias.identificacao_cnpjs_noticias import identificar_possiveis_empresas_citadas
 from noticias_ner.util.mail import enviar_email
 
@@ -29,7 +29,7 @@ if __name__ == '__main__':
     data_inicial = None
 
     if len(sys.argv) == 1:
-        print('Exemplo de execução: main_noticias.py -t"<texto da consulta>" -d"<data inicial>"')
+        print('Exemplo de execução: main_gnews.py -t"<texto da consulta>" -d"<data inicial>"')
         exit()
 
     if len(sys.argv) > 1:
