@@ -17,4 +17,4 @@ if __name__ == '__main__':
             if '.pdf' in file or '.docx' in file or '.doc' in file or '.rtf' in file:
                 converter_para_txt(os.path.join(root, file), diretorio_txt)
             else:
-                print('Formato não suportado.')
+                print('Formato não suportado: ' + file)

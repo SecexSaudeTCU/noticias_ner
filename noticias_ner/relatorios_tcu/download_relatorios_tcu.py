@@ -5,10 +5,11 @@ from noticias_ner.util.download import download
 
 if __name__ == '__main__':
     diretorio = config.diretorio_dados.joinpath('relatorios_tcu')
-    df = pd.read_excel(diretorio.joinpath('extracao relatorios fiscobras.xlsx'))
-    arquivos = ['N/A'] * len(df)
+    df = pd.read_excel(diretorio.joinpath('com_nomes_arquivos.xlsx'))
+    df['arquivo'] = df['arquivo'].fillna('N/A')
+    arquivos = list(df['arquivo'])
     qtd_maxima = 100
-    inicio = 101
+    inicio = 294
     qtd = 0
 
     for i, row in df.iterrows():
