@@ -11,4 +11,5 @@ def converter_para_txt(caminho_arquivo, diretorio_alvo):
     if not os.path.exists(caminho_arquivo_texto):
         raw = parser.from_file(caminho_arquivo)
         with open(caminho_arquivo_texto, 'w', encoding='utf-8') as arquivo:
-            arquivo.write(raw['content'])
+            if raw['content']:
+                arquivo.write(raw['content'])
