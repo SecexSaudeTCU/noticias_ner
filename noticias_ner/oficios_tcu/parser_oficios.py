@@ -11,14 +11,13 @@ def parse_oficio(arquivo, ner=FinedTunedBERT_NER()):
     print('Executando o parsing do arquivo ' + caminho)
     nome_arquivo = caminho[caminho.rfind(os.sep):]
     texto = open(caminho, 'r', encoding='utf-8').read()
-    regex_cpf_cnpj = r'([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?' \
-                     r'[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})'
+    regex_cpf_cnpj = r'([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|' \
+                     r'([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})'
 
     if 'Citação' in nome_arquivo:
-        regexes_enderecamento = [r'Natureza: Citação(.*?)Prezada', r'Natureza: Citação(.*?)Prezado',
-                                 r'Natureza: Citação(.*?)Senhora', r'Natureza: Citação(.*?)Senhor',
-                                 r'Natureza: Citação(.*?)Senhor(a)',
-                                 ]
+        regexes_enderecamento = [r'Natureza: Citação(.*?)Prezad[a|o]',
+                                 r'Natureza: Citação(.*?)Senhor[a]?',
+                                 r'Natureza: Citação(.*?)Senhor(a)']
         for regex in regexes_enderecamento:
             ocorrencias = re.findall(regex, texto, flags=re.DOTALL)
             if len(ocorrencias) > 0:
@@ -48,9 +47,7 @@ def parse_oficio(arquivo, ner=FinedTunedBERT_NER()):
 
                 break
 
-        regexes_irregularidades = [r'O débito é decorrente de(.*?):', r'O débito é decorrente do(.*?):',
-                                   r'O débito é decorrente da(.*?):', r'O débito é decorrente dos(.*?):',
-                                   r'O débito é decorrente das(.*?):']
+        regexes_irregularidades = [r'O débito é decorrente d[e|o|a|os|as](.*?):']
         for regex in regexes_irregularidades:
             ocorrencias = re.findall(regex, texto, flags=re.DOTALL)
             if len(ocorrencias) > 0:
