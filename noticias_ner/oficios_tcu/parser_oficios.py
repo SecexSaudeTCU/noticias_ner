@@ -13,52 +13,67 @@ def parse_oficio(arquivo, ner=FinedTunedBERT_NER()):
     texto = open(caminho, 'r', encoding='utf-8').read()
     regex_cpf_cnpj = r'([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|' \
                      r'([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})'
+    texto = __remover_assinatura(texto)
+    texto = __remover_mencao_ministros(texto)
 
     if 'Citação' in nome_arquivo:
-        regexes_enderecamento = [r'Natureza: Citação(.*?)Prezad[a|o]',
-                                 r'Natureza: Citação(.*?)Senhor[a]?',
-                                 r'Natureza: Citação(.*?)Senhor(a)']
-        for regex in regexes_enderecamento:
-            ocorrencias = re.findall(regex, texto, flags=re.DOTALL)
-            if len(ocorrencias) > 0:
-                enderecamento = ocorrencias[0]
-
-                if isinstance(enderecamento, tuple):
-                    enderecamento = enderecamento[0]
-
-                # Extrai o nome da pessoa física ou jurídica por meio do NER
-                entidades_texto = ner._extrair_entidades_de_texto(enderecamento)
-                for entidade, tipo_entidade in entidades_texto:
-                    if tipo_entidade == 'PESSOA':
-                        responsavel = entidade
-                        # Busca por CPF
-                        cpfs = re.findall(regex_cpf_cnpj, enderecamento, flags=re.DOTALL)
-                        if len(cpfs) > 0:
-                            cpf_cnpj = cpfs[0][1]
-                        break
-                    elif tipo_entidade == 'ORGANIZAÇÃO':
-                        responsavel = entidade
-
-                        # Busca por CNPJ
-                        cnpjs = re.findall(regex_cpf_cnpj, enderecamento, flags=re.DOTALL)
-                        if len(cnpjs) > 0:
-                            cpf_cnpj = cnpjs[0][0]
-                        break
-
-                break
-
-        regexes_irregularidades = [r'O débito é decorrente d[e|o|a|os|as](.*?):']
-        for regex in regexes_irregularidades:
-            ocorrencias = re.findall(regex, texto, flags=re.DOTALL)
-            if len(ocorrencias) > 0:
-                irregularidades = ocorrencias[0]
-
-                if isinstance(irregularidades, tuple):
-                    irregularidades = irregularidades[0]
+        responsaveis, cpfs, cnpjs, irregularidades = __parse(ner, regex_cpf_cnpj,
+                                                             [r'O débito é decorrente d[e|o|a|os|as](.*?):'], texto)
     elif 'Oitiva' in nome_arquivo:
-        return None
+        responsaveis, cpfs, cnpjs, irregularidades = __parse(ner, regex_cpf_cnpj,
+                                                             [r'ocorrência\(s\) descrita\(s\) a seguir:(.*?)\.\n'],
+                                                             texto)
 
-    return responsavel, cpf_cnpj, irregularidades.strip()
+    return responsaveis, cpfs, cnpjs, irregularidades.strip()
+
+
+def __remover_assinatura(texto):
+    regex_assinatura = r'(Atenciosamente|Respeitosamente)(.*?)$'
+    ocorrencias = re.findall(regex_assinatura, texto, flags=re.DOTALL)
+    if len(ocorrencias) > 0:
+        ocorrencia = ocorrencias[0]
+        if len(ocorrencia[0]) > len(ocorrencia[1]):
+            ocorrencia = ocorrencia[0]
+        else:
+            ocorrencia = ocorrencia[1]
+        texto = texto.replace(ocorrencia, '')
+    return texto
+
+
+def __remover_mencao_ministros(texto):
+    # Remove parágrafo que faz menção ao nome do ministro/relator, para evitar que o NER recupere como entidade
+    regexes = [r'Conforme Despacho d[o|a] Presidente, Ministr[o|a](.*?)\.\n',
+               r'Conforme Despacho d[o|a] Relator(a), Ministr[o|a](.*?)\.\n',
+               r'Conforme delegação de competência conferida pel[o|a] Relator[a]?(.*?)\.\n']
+    for regex in regexes:
+        ocorrencias = re.findall(regex, texto, flags=re.DOTALL)
+        if len(ocorrencias) > 0:
+            texto = texto.replace(ocorrencias[0], '')
+            return texto
+    return texto
+
+
+def __parse(ner, regex_cpf_cnpj, regexes_irregularidades, texto):
+    # Extrai o nome da pessoa física ou jurídica por meio do NER
+    entidades_texto = ner._extrair_entidades_de_texto(texto)
+    responsaveis = set([entidade for entidade, tipo_entidade in entidades_texto if
+                        tipo_entidade in ['PESSOA', 'ORGANIZAÇÃO']])
+    cpfs_cnpjs = re.findall(regex_cpf_cnpj, texto, flags=re.DOTALL)
+    cpfs = set([cpf for _, cpf in cpfs_cnpjs if len(cpf.strip()) > 0])
+    cnpjs = set([cnpj for cnpj, _ in cpfs_cnpjs if len(cnpj.strip()) > 0])
+    irregularidades = __parse_irregularidades(regexes_irregularidades, texto)
+    return responsaveis, cpfs, cnpjs, irregularidades
+
+
+def __parse_irregularidades(regexes_irregularidades, texto):
+    for regex in regexes_irregularidades:
+        ocorrencias = re.findall(regex, texto, flags=re.DOTALL)
+        if len(ocorrencias) > 0:
+            irregularidades = ocorrencias[0]
+
+            if isinstance(irregularidades, tuple):
+                irregularidades = irregularidades[0]
+    return irregularidades
 
 
 if __name__ == '__main__':
