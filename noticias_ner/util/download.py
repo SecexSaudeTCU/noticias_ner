@@ -23,18 +23,12 @@ def download(url, diretorio, nome_arquivo=None):
         r = requests.get(url, headers=headers, verify=False, timeout=60)
 
         if r.status_code != 500:
-            if not nome_arquivo:
-                if 'Content-Disposition' in r.headers:
-                    content_disposition = r.headers['Content-Disposition']
-                    filename = content_disposition[content_disposition.find('"') + 1:content_disposition.rfind('"')]
-                    nome_arquivo = filename
-                    caminho_arquivo = os.path.join(diretorio, nome_arquivo)
+            if 'Content-Disposition' in r.headers:
+                caminho_arquivo = os.path.join(diretorio, nome_arquivo)
 
-                    with open(caminho_arquivo, 'wb') as f:
-                        f.write(r.content)
+                with open(caminho_arquivo, 'wb') as f:
+                    f.write(r.content)
 
             return nome_arquivo
 
         return None
-
-

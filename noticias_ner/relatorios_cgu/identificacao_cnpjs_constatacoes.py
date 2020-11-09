@@ -20,14 +20,18 @@ def identificar_possiveis_empresas_citadas(caminho_arquivo, filtrar_por_empresas
     """
     df = pd.read_excel(caminho_arquivo)
     resultado_analise = dict()
-    arquivo = constatacao = None
+    acao_de_controle = situacao = municipio = data_homologacao = None
     repositorio_cnpj = get_repositorio_cnpj()
 
     for i in range(len(df)):
-        classificacao, entidade, (arquivo, constatacao) = __get_valores(df, i, arquivo, constatacao)
+        classificacao, entidade, (acao_de_controle, situacao, municipio, data_homologacao) = __get_valores(df, i,
+                                                                                                           acao_de_controle,
+                                                                                                           situacao,
+                                                                                                           municipio,
+                                                                                                           data_homologacao)
 
         adicionar_aos_resultados(classificacao, entidade, filtrar_por_empresas_unicas, repositorio_cnpj,
-                                 resultado_analise, (arquivo, constatacao))
+                                 resultado_analise, (acao_de_controle, situacao, municipio, data_homologacao))
 
     persistir_informacoes(repositorio_cnpj, resultado_analise)
 
@@ -37,16 +41,20 @@ def identificar_possiveis_empresas_citadas(caminho_arquivo, filtrar_por_empresas
     return config.arquivo_gerado_final
 
 
-def __get_valores(df, i, arquivo, constatacao):
+def __get_valores(df, i, acao_de_controle, situacao, municipio, data_homologacao):
     if not pd.isna(df.iloc[i, 0]):
-        arquivo = df.iloc[i, 0]
+        acao_de_controle = df.iloc[i, 0]
     if not pd.isna(df.iloc[i, 1]):
-        constatacao = df.iloc[i, 1]
+        situacao = df.iloc[i, 1]
+    if not pd.isna(df.iloc[i, 2]):
+        municipio = df.iloc[i, 2]
+    if not pd.isna(df.iloc[i, 3]):
+        data_homologacao = df.iloc[i, 3]
 
-    entidade = df.iloc[i, 3]
-    classificacao = df.iloc[i, 4]
+    entidade = df.iloc[i, 6]
+    classificacao = df.iloc[i, 7]
 
-    return classificacao, entidade, (arquivo, constatacao)
+    return classificacao, entidade, (acao_de_controle, situacao, municipio, data_homologacao)
 
 
 if __name__ == '__main__':

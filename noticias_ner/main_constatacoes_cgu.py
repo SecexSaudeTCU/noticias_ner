@@ -12,5 +12,5 @@ from noticias_ner import config
 
 if __name__ == '__main__':
     # Executa a extração de entidades
-    arquivo_entidades = extrair_entidades(os.path.join(config.diretorio_dados, 'relatorios_cgu', 'constatacoes.xlsx'),
+    arquivo_entidades = extrair_entidades(os.path.join(config.diretorio_dados, 'pnae', 'constatacoes.xlsx'),
                                           ExtratorEntidadesConstatacoes(), 'ner_constatacoes.xlsx')

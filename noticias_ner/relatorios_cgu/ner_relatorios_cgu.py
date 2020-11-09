@@ -82,27 +82,25 @@ class ExtratorEntidadesConstatacoes(ExtratorEntidades):
         df_final = pd.DataFrame()
 
         for i in range(0, len(df)):
-            diretorio = config.diretorio_dados.joinpath('relatorios_cgu').joinpath('ner').joinpath('constatacoes')
-            nome_arquivo = path.join(diretorio, f'ner_{i}.xlsx')
+            acao_de_controle = df.loc[i, 'Ação de Controle']
+            situacao = df.loc[i, 'Situação']
+            municipio = df.loc[i, 'Município']
+            data_homologacao = df.loc[i, 'Data de Homologação']
+            constatacoes = df.loc[i, 'Constatações encontradas']
+            start_time = time.time()
 
-            if not path.exists(nome_arquivo):
-                arquivo = df.loc[i, 'ARQUIVO']
-                constatacoes = df.loc[i, 'CONSTATAÇÕES']
-                start_time = time.time()
+            if len(constatacoes.strip()) > 0:
+                print(f'Extraindo entidades texto {i}...')
+                entidades_texto = ner._extrair_entidades_de_texto(constatacoes, margem=350)
+                print("--- %s segundos ---" % (time.time() - start_time))
+                resultado_analise = dict()
+                resultado_analise[
+                    (acao_de_controle, situacao, municipio, data_homologacao, constatacoes)] = entidades_texto
 
-                if len(constatacoes.strip()) > 0:
-                    print(f'Extraindo entidades texto {i}...')
-                    entidades_texto = ner._extrair_entidades_de_texto(constatacoes, margem=350)
-                    print("--- %s segundos ---" % (time.time() - start_time))
-                    resultado_analise = dict()
-                    resultado_analise[(arquivo, constatacoes)] = entidades_texto
+                df_gerado = pd.concat(
+                    {k: pd.DataFrame(v, columns=['ENTIDADE', 'CLASSIFICAÇÃO']) for k, v in
+                     resultado_analise.items()})
 
-                    df_gerado = pd.concat(
-                        {k: pd.DataFrame(v, columns=['ENTIDADE', 'CLASSIFICAÇÃO']) for k, v in resultado_analise.items()})
-
-                    # Salva os resultados intermediários
-                    df_gerado.to_excel(nome_arquivo)
-
-                    df_final = df_final.append(df_gerado)
+                df_final = df_final.append(df_gerado)
 
         return df_final

@@ -6,7 +6,7 @@ from os import path
 from noticias_ner.util.conversor_txt import converter_para_txt
 
 if __name__ == '__main__':
-    diretorio_pdf = config.diretorio_dados.joinpath('relatorios_cgu')
+    diretorio_pdf = config.diretorio_dados.joinpath('pnae')
     diretorio_txt = diretorio_pdf.joinpath('txt')
 
     if not path.exists(diretorio_txt):
