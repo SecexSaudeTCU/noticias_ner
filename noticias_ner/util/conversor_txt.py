@@ -13,3 +13,12 @@ def converter_para_txt(caminho_arquivo, diretorio_alvo):
         with open(caminho_arquivo_texto, 'w', encoding='utf-8') as arquivo:
             if raw['content']:
                 arquivo.write(raw['content'])
+
+
+def converter_para_txt(caminho_arquivo):
+    raw = parser.from_file(caminho_arquivo)
+
+    if raw['content']:
+        return raw['content']
+
+    return None
