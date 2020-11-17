@@ -3,13 +3,6 @@ from flask import Flask
 
 from noticias_ner.api.endpoints import ner_api
 
-app = Flask(__name__)
-
-
-def __inicializar_aplicacao():
-    app.register_blueprint(ner_api)
-    __criar_especificacao_swagger()
-
 
 def __criar_especificacao_swagger():
     template = {
@@ -28,7 +21,7 @@ def __criar_especificacao_swagger():
     Swagger(app, template=template)
 
 
-if __name__ == "__main__":
-    __inicializar_aplicacao()
-    #app.run(host='0.0.0.0', debug=True)
-    app.run()
+app = Flask(__name__)
+
+app.register_blueprint(ner_api)
+__criar_especificacao_swagger()
