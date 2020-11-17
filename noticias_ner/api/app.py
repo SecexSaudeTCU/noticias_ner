@@ -30,4 +30,5 @@ def __criar_especificacao_swagger():
 
 if __name__ == "__main__":
     __inicializar_aplicacao()
-    app.run(host='0.0.0.0', debug=True)
+    #app.run(host='0.0.0.0', debug=True)
+    app.run()
