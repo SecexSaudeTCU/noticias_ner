@@ -14,11 +14,10 @@ from torch.utils.data import DataLoader
 from transformers import DistilBertTokenizerFast, TrainingArguments, Trainer, \
     BertForTokenClassification, EvalPrediction, AutoConfig
 
-
 # Code is partially inspired by https://huggingface.co/transformers/master/custom_datasets.html
 # See https://github.com/neuralmind-ai/portuguese-bert for info about the Neuralmind pretained model.
 from noticias_ner import config
-from noticias_ner.ner.bert import pre_processar_tokens
+from noticias_ner.ner.bert.bert_utils import pre_processar_tokens
 
 
 class NoticiasDataset(torch.utils.data.Dataset):

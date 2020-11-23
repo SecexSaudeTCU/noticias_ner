@@ -1,7 +1,6 @@
 import configparser
 import os
 import smtplib
-import ssl
 import sys
 from email import encoders
 from email.mime.base import MIMEBase
