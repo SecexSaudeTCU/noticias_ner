@@ -3,11 +3,13 @@ from cnpjutil.cnpj.dao import DaoBase
 from cnpjutil.cnpj.repositorio_corporativo import RepositorioCNPJCorporativo, \
     DaoRFB_SQLServer
 
+from noticias_ner import config
+
 
 class RepositorioCNPJCorporativoPersistente(RepositorioCNPJCorporativo):
     def persistir_informacoes(self, df):
         listas_cnpjs = df['POSSÍVEIS CNPJs CITADOS']
-        daoTipologias = DaoTipologias(self.arquivo_configuracoes)
+        daoTipologias = DaoTipologias(str(config.arquivo_config))
         daoRFB = DaoRFB_SQLServer(self.arquivo_configuracoes)
 
         for lista_cnpj in listas_cnpjs:
