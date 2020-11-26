@@ -3,9 +3,9 @@ import logging
 import os
 
 import pandas as pd
+from cnpjutil.cnpj.fabrica_provedor_cnpj import get_repositorio_cnpj
 
 from noticias_ner import config
-from noticias_ner.cnpj.fabrica_provedor_cnpj import get_repositorio_cnpj
 from noticias_ner.cnpj.identificacao_cnpjs import adicionar_aos_resultados, persistir_informacoes
 
 
@@ -21,10 +21,11 @@ def identificar_possiveis_empresas_citadas(caminho_arquivo, filtrar_por_empresas
     df = pd.read_excel(caminho_arquivo)
     resultado_analise = dict()
     data = link = midia = texto = titulo = ufs = None
-    repositorio_cnpj = get_repositorio_cnpj()
+    repositorio_cnpj = get_repositorio_cnpj(str(config.arquivo_config_cnpj))
 
     for i in range(len(df)):
-        classificacao, entidade, (data, link, midia, texto, titulo, ufs) = __get_valores(df, i, data, link, midia, texto, titulo, ufs)
+        classificacao, entidade, (data, link, midia, texto, titulo, ufs) = __get_valores(df, i, data, link, midia,
+                                                                                         texto, titulo, ufs)
 
         adicionar_aos_resultados(classificacao, entidade, filtrar_por_empresas_unicas, repositorio_cnpj,
                                  resultado_analise, (data, link, midia, texto, titulo, ufs))

@@ -5,6 +5,7 @@ diretorio_raiz = pathlib.Path(__file__).parent.parent
 
 diretorio_config = diretorio_raiz.joinpath('config')
 arquivo_config = diretorio_config.joinpath('noticias_ner.cfg')
+arquivo_config_cnpj = diretorio_config.joinpath('cnpj.cfg')
 
 diretorio_dados = diretorio_raiz.joinpath('dados')
 arquivo_gerado_final = diretorio_dados.joinpath('com_empresas.xlsx')
