@@ -7,7 +7,7 @@ from cnpjutil.cnpj.repositorio_corporativo import RepositorioCNPJCorporativo, \
 class RepositorioCNPJCorporativoPersistente(RepositorioCNPJCorporativo):
     def persistir_informacoes(self, df):
         listas_cnpjs = df['POSSÍVEIS CNPJs CITADOS']
-        daoTipologias = DaoTipologias()
+        daoTipologias = DaoTipologias(self.arquivo_configuracoes)
         daoRFB = DaoRFB_SQLServer(self.arquivo_configuracoes)
 
         for lista_cnpj in listas_cnpjs:
