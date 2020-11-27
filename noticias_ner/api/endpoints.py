@@ -1,11 +1,11 @@
 import os
 from collections import defaultdict
 
+from cnpjutil.cnpj.fabrica_provedor_cnpj import get_repositorio_cnpj
 from flask import jsonify, Response, request, flash, Blueprint
 from werkzeug.utils import redirect, secure_filename
 
 from noticias_ner import config
-from noticias_ner.cnpj.fabrica_provedor_cnpj import get_repositorio_cnpj
 from noticias_ner.cnpj.identificacao_cnpjs import adicionar_aos_resultados
 from noticias_ner.ner.bert.bert_ner import FinedTunedBERT_NER
 from noticias_ner.util.conversor_txt import converter_para_txt

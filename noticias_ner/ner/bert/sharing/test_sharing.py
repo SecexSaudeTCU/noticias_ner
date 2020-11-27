@@ -6,11 +6,11 @@ tokenizer = DistilBertTokenizerFast.from_pretrained('neuralmind/bert-base-portug
                                                     , model_max_length=512
                                                     , do_lower_case=False
                                                     )
-nlp1 = pipeline('ner', model=model, tokenizer=tokenizer)
-nlp2 = pipeline('ner', model=model, tokenizer=tokenizer, grouped_entities=True)
+# Salva o tokenizer para subir junto com o meu modelo fine-tuned para o Huggingface:
+tokenizer.save_pretrained('caminho/para/tokenizer')
 
-result = nlp1("O Tribunal de Contas da União é localizado em Brasília e foi fundado por Rui Barbosa.  Fiscaliza contratos, por exemplo com empresas como a Veigamed e a Buyerbr.")
-print(result)
+nlp = pipeline('ner', model=model, tokenizer=tokenizer, grouped_entities=True)
 
-result = nlp2("O Tribunal de Contas da União é localizado em Brasília e foi fundado por Rui Barbosa.  Fiscaliza contratos, por exemplo com empresas como a Veigamed e a Buyerbr.")
+result = nlp(
+    "O Tribunal de Contas da União é localizado em Brasília e foi fundado por Rui Barbosa.  Fiscaliza contratos, por exemplo com empresas como a Veigamed e a Buyerbr.")
 print(result)
