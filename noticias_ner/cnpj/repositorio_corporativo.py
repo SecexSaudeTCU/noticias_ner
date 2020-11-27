@@ -8,6 +8,9 @@ from noticias_ner import config
 
 class RepositorioCNPJCorporativoPersistente(RepositorioCNPJCorporativo):
     def persistir_informacoes(self, df):
+        #Primeiramente, salva as informações em arquivo Excel, para em seguida enviar por e-mail
+        df.to_excel(config.arquivo_gerado_final)
+
         listas_cnpjs = df['POSSÍVEIS CNPJs CITADOS']
         daoTipologias = DaoTipologias(str(config.arquivo_config))
         daoRFB = DaoRFB_SQLServer(self.arquivo_configuracoes)
