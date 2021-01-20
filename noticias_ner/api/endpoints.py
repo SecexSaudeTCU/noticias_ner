@@ -145,7 +145,7 @@ def __extrair_entidades(texto):
 def __processar_cnpjs(retorno):
     buscar_cnpj = request.args['buscar-cnpj']
     if buscar_cnpj == 'S':
-        repositorio_cnpj = get_repositorio_cnpj()
+        repositorio_cnpj = get_repositorio_cnpj(str(config.arquivo_config_cnpj))
         resultado_analise = dict()
         empresas = retorno['ORGANIZAÇÃO']
 
