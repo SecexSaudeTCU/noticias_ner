@@ -147,24 +147,25 @@ def __processar_cnpjs(retorno):
     if buscar_cnpj == 'S':
         repositorio_cnpj = get_repositorio_cnpj(str(config.arquivo_config_cnpj))
         resultado_analise = dict()
-        empresas = retorno['ORGANIZAÇÃO']
+        if 'ORGANIZAÇÃO' in retorno:
+            empresas = retorno['ORGANIZAÇÃO']
 
-        for empresa in empresas:
-            adicionar_aos_resultados('ORGANIZAÇÃO', empresa, True, repositorio_cnpj, resultado_analise, ())
+            for empresa in empresas:
+                adicionar_aos_resultados('ORGANIZAÇÃO', empresa, True, repositorio_cnpj, resultado_analise, ())
 
-        resultado_analise = {k[0]: v for k, v in resultado_analise.items()}
+            resultado_analise = {k[0]: v for k, v in resultado_analise.items()}
 
-        # Elimina os nomes de empresa repetidos.
-        retorno['ORGANIZAÇÃO'] = set(retorno['ORGANIZAÇÃO'])
+            # Elimina os nomes de empresa repetidos.
+            retorno['ORGANIZAÇÃO'] = set(retorno['ORGANIZAÇÃO'])
 
-        # Cria uma nova estrutura de dados para abrigar os metadados de cada organização cujo CNPJ foi encontrado.
-        organizacoes = dict()
-        for empresa in retorno['ORGANIZAÇÃO']:
-            if empresa in resultado_analise:
-                organizacoes[empresa] = {'razao-social': resultado_analise[empresa][0][0],
-                                         'cnpj': resultado_analise[empresa][0][1][0]}
+            # Cria uma nova estrutura de dados para abrigar os metadados de cada organização cujo CNPJ foi encontrado.
+            organizacoes = dict()
+            for empresa in retorno['ORGANIZAÇÃO']:
+                if empresa in resultado_analise:
+                    organizacoes[empresa] = {'razao-social': resultado_analise[empresa][0][0],
+                                             'cnpj': resultado_analise[empresa][0][1][0]}
 
-        retorno['ORGANIZAÇÃO'] = organizacoes
+            retorno['ORGANIZAÇÃO'] = organizacoes
 
 
 def __get_lista_tipos():
