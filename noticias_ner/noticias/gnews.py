@@ -15,7 +15,7 @@ from GoogleNews import GoogleNews
 from noticias_ner import config
 
 
-def extrai_noticias_google(q, dia_inicio, dia_fim, num_limite_paginas=1, lang='pt-BR', sleep=1, tentativas=5):
+def __extrai_noticias_google(q, dia_inicio, dia_fim, num_limite_paginas=1, lang='pt-BR', sleep=1, tentativas=5):
     """
     Retorna data frame com as notícias obtidas na aba News do Google
 
@@ -110,7 +110,7 @@ def executar_busca(data_inicial, q):
     num_limite_paginas = 100
 
     # Realiza busca
-    df = extrai_noticias_google(q, dia_inicio, dia_fim, num_limite_paginas=num_limite_paginas, sleep=10, tentativas=10)
+    df = __extrai_noticias_google(q, dia_inicio, dia_fim, num_limite_paginas=num_limite_paginas, sleep=10, tentativas=10)
 
     # Salva resultados
     if not path.exists(config.diretorio_dados):
